@@ -1,0 +1,57 @@
+body {
+  background-color: #666;
+}
+
+#controls {
+  margin: 20px;
+}
+
+.button {
+  height: 20px;
+  width: 60px;
+}
+
+.district {
+  background-color: #999;
+  margin: 4px;
+  display: inline-block;
+}
+
+.voter {
+  width: 10px;
+  height: 10px;
+  margin: 4px;
+  display: table;
+}
+
+.representative {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  margin: 4px;
+  display: table;
+}
+
+.dem {
+  background-color: #22e;
+}
+
+.rep {
+  background-color: #e22;
+}
+
+.lastVotedDem {
+  border: 2px solid #55e;
+}
+
+.lastVotedRep {
+  border: 2px solid #e55;
+}
+
+.noLastVote {
+  border: 2px solid #888;
+}
+
+.none {
+  background-color: #000;
+}
