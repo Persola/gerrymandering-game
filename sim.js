@@ -4,7 +4,7 @@ const ROOT_VOTERS_PER_DISTRICT = 3;
 // fixed
 const PARTIES = ['dem', 'rep'];
 const NO_REP = 'no_representative'
-const VOTE_WITH_PARTY_RATE = 0.9;
+const VOTE_WITH_PARTY_RATE = 1.0;
 const NUM_DISTRICTS = ROOT_NUM_DISTRICTS**2;
 const ROOT_TOTAL_VOTERS = ROOT_NUM_DISTRICTS * ROOT_VOTERS_PER_DISTRICT;
 const DIST_ID_TO_COLOR = {
@@ -58,19 +58,49 @@ voters.perVoter = (lambda) => {
 
 // DATA GENERATION/ALTERATION
 
-const generate = () => {
+const generate = (percentDem) => {
+  if (percentDem === undefined) {
+    percentDem = 0.5;
+  }
+  
+  let totalVoters = ROOT_TOTAL_VOTERS**2;
+  let numDemVoters = Math.floor(totalVoters * percentDem);
+  let numRepVoters = totalVoters - numDemVoters;
+  let voterAffiliations = [];
+  for (let demInd = 0; demInd < numDemVoters; demInd++) {
+    voterAffiliations.push(PARTIES[0]);
+  }
+  for (let repInd = 0; repInd < numRepVoters; repInd++) {
+    voterAffiliations.push(PARTIES[1]);
+  }
+  voterAffiliations = shuffle(voterAffiliations);
+
   for (let i = 0; i < ROOT_TOTAL_VOTERS; i++) {
     voters[i] = [];
 
     for (let j = 0; j < ROOT_TOTAL_VOTERS; j++) {
-      const partyAffiliation = Math.random() > 0.5 ? PARTIES[0] : PARTIES[1]
       voters[i][j] = {
         voterId: [i, j],
-        partyAffiliation: partyAffiliation,
+        partyAffiliation: voterAffiliations.pop(),
         districtId: assignDistrictId(i, j)
       };
     }
   }
+};
+
+// from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+const shuffle = (array) => {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 };
 
 const assignDistrictId = (x, y) => {
@@ -131,7 +161,7 @@ const renderDistrictSelectorPanel = (districtCounts) => {
 
   for (let i = 0; i < NUM_DISTRICTS; i++) {
     const districtSelector = document.createElement('div');
-    districtSelector.innerHTML = String(districtCounts[i])
+    districtSelector.innerHTML = String(districtCounts[i]);
     districtSelector.classList.add('districtSelector');
     districtSelector.classList.add(representatives[i]);
     districtSelector.setAttribute('data-district-id', i);
@@ -192,7 +222,7 @@ const runGeneral = () => {
 
   for (let i = 0; i < NUM_DISTRICTS; i++) {
     if (voteCount[i]['dem'] === voteCount[i]['rep']) {
-      $('#sim').innerHTML = '';
+      $('#sim').innerHTML = 'error; see console';
       throw('tie!');
     };
     if (voteCount[i]['dem'] > voteCount[i]['rep']) {
@@ -203,6 +233,10 @@ const runGeneral = () => {
   }
 
   render();
+};
+
+const regenerate = () => {
+  generate(Number($('#percentDem').value));
 };
 
 // const clearReps = () => {
