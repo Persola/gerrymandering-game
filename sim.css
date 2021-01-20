@@ -13,29 +13,19 @@ body {
 
 #map {
   display: grid;
-  grid-template-columns: 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px;
-  grid-template-rows: 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px;
+  margin-left: 20px;
 }
-
-/* .district {
-  background-color: #999;
-  margin: 4px;
-  display: inline-block;
-} */
 
 .voter {
-  width: 20px;
-  height: 20px;
-  border: 5px solid #222;
 }
 
-/* .representative {
-  width: 16px;
-  height: 16px;
-  border: 1px solid #ccc;
-  margin: 4px;
-  display: table;
-} */
+.voterAffiliation {
+  width: 20px;
+  height: 20px;
+  margin: 5px auto;
+  border-radius: 10px;
+  box-shadow: 1px 1px rgba(1, 1, 1, 0.55);
+}
 
 .dem {
   background-color: #22e;
@@ -72,28 +62,7 @@ body {
 .districtSelector {
   width: 20px;
   height: 20px;
+  text-align: center;
+  background-color: #888;
+  text-shadow: 2px 2px 2px #000;
 }
-
-.districtSelector[data-district-id="0"] { border: 5px solid #6ad }
-.districtSelector[data-district-id="1"] { border: 5px solid #b6d }
-.districtSelector[data-district-id="2"] { border: 5px solid #2bb }
-.districtSelector[data-district-id="3"] { border: 5px solid #bd6 }
-.districtSelector[data-district-id="4"] { border: 5px solid #db6 }
-.districtSelector[data-district-id="5"] { border: 5px solid #e5b }
-.districtSelector[data-district-id="6"] { border: 5px solid #49d }
-.districtSelector[data-district-id="7"] { border: 5px solid #4d9 }
-.districtSelector[data-district-id="8"] { border: 5px solid #94d }
-.districtSelector[data-district-id="9"] { border: 5px solid #7c4 }
-.districtSelector[data-district-id="10"] { border: 5px solid #ea5 }
-
-.district-0 { border: 5px solid #6ad }
-.district-1 { border: 5px solid #b6d }
-.district-2 { border: 5px solid #2bb }
-.district-3 { border: 5px solid #bd6 }
-.district-4 { border: 5px solid #db6 }
-.district-5 { border: 5px solid #e5b }
-.district-6 { border: 5px solid #49d }
-.district-7 { border: 5px solid #4d9 }
-.district-8 { border: 5px solid #94d }
-.district-9 { border: 5px solid #7c4 }
-.district-10 { border: 5px solid #ea5 }
