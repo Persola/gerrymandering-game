@@ -1,12 +1,6 @@
-// configurable
-const ROOT_NUM_DISTRICTS = 4;
-const ROOT_VOTERS_PER_DISTRICT = 3;
-// fixed
 const PARTIES = ['dem', 'rep'];
-const NO_REP = 'no_representative'
-const VOTE_WITH_PARTY_RATE = 1.0;
-const NUM_DISTRICTS = ROOT_NUM_DISTRICTS**2;
-const ROOT_TOTAL_VOTERS = ROOT_NUM_DISTRICTS * ROOT_VOTERS_PER_DISTRICT;
+// const NO_REP = 'no_representative'
+// const VOTE_WITH_PARTY_RATE = 1.0;
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
@@ -35,15 +29,16 @@ const DIST_ID_TO_COLOR = {
   24: 'f8dc81'
 };
 
-if (NUM_DISTRICTS > Object.keys(DIST_ID_TO_COLOR).length) {
-  throw('I need more colors (add to DIST_ID_TO_COLOR)');
-}
-
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 // GLOBALS
 
+let percentDem = 0.5;
+let rootNumDistricts = 4;
+let rootVotersPerDistrict = 3;
+let numDistricts = rootNumDistricts**2;
+let rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;  
 const voters = [];
 const representatives = {};
 let selectedDistrictId = null;
@@ -58,12 +53,28 @@ voters.perVoter = (lambda) => {
 
 // DATA GENERATION/ALTERATION
 
-const generate = (percentDem) => {
+const generate = () => {
+  percentDem = Number($('#percentDem').value);
+  rootNumDistricts = Number($('#rootNumDistConfig').value);
+  rootVotersPerDistrict = Number($('#rootVotersPerDist').value);
+
+  // derived constants here because they are configurable
+  numDistricts = rootNumDistricts**2;
+  rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;
+  if (numDistricts > Object.keys(DIST_ID_TO_COLOR).length) {
+    throw('I need more colors (add to DIST_ID_TO_COLOR)');
+  }
+
   if (percentDem === undefined) {
     percentDem = 0.5;
   }
   
-  let totalVoters = ROOT_TOTAL_VOTERS**2;
+  generateVoters();
+  applyDynamicStyles();
+};
+
+const generateVoters = () => {
+  let totalVoters = rootTotalVoters**2;
   let numDemVoters = Math.floor(totalVoters * percentDem);
   let numRepVoters = totalVoters - numDemVoters;
   let voterAffiliations = [];
@@ -75,10 +86,11 @@ const generate = (percentDem) => {
   }
   voterAffiliations = shuffle(voterAffiliations);
 
-  for (let i = 0; i < ROOT_TOTAL_VOTERS; i++) {
+  voters.length = 0;
+  for (let i = 0; i < rootTotalVoters; i++) {
     voters[i] = [];
 
-    for (let j = 0; j < ROOT_TOTAL_VOTERS; j++) {
+    for (let j = 0; j < rootTotalVoters; j++) {
       voters[i][j] = {
         voterId: [i, j],
         partyAffiliation: voterAffiliations.pop(),
@@ -104,15 +116,15 @@ const shuffle = (array) => {
 };
 
 const assignDistrictId = (x, y) => {
-  for (let xDistCoord = 0; xDistCoord < ROOT_NUM_DISTRICTS; xDistCoord++) {
-    for (let yDistCoord = 0; yDistCoord < ROOT_NUM_DISTRICTS; yDistCoord++) {
+  for (let xDistCoord = 0; xDistCoord < rootNumDistricts; xDistCoord++) {
+    for (let yDistCoord = 0; yDistCoord < rootNumDistricts; yDistCoord++) {
       if (
-        (x >= ROOT_VOTERS_PER_DISTRICT * xDistCoord) &&
-        (x < ROOT_VOTERS_PER_DISTRICT * (xDistCoord + 1)) &&
-        (y >= ROOT_VOTERS_PER_DISTRICT * yDistCoord) &&
-        (y < ROOT_VOTERS_PER_DISTRICT * (yDistCoord + 1))
+        (x >= rootVotersPerDistrict * xDistCoord) &&
+        (x < rootVotersPerDistrict * (xDistCoord + 1)) &&
+        (y >= rootVotersPerDistrict * yDistCoord) &&
+        (y < rootVotersPerDistrict * (yDistCoord + 1))
       ) {
-        return (xDistCoord * ROOT_NUM_DISTRICTS) + yDistCoord;
+        return (xDistCoord * rootNumDistricts) + yDistCoord;
       }
     }
   }
@@ -131,8 +143,8 @@ const render = () => {
 const renderMap = (voterData) => {
   const mapDom = document.createElement('div');
   mapDom.id = 'map';
-  mapDom.style['grid-template-rows'] = '30px '.repeat(ROOT_TOTAL_VOTERS);
-  mapDom.style['grid-template-columns'] = '30px '.repeat(ROOT_TOTAL_VOTERS);
+  mapDom.style['grid-template-rows'] = '30px '.repeat(rootTotalVoters);
+  mapDom.style['grid-template-columns'] = '30px '.repeat(rootTotalVoters);
 
   for (voterRowData of voterData) {
     for (voterData of voterRowData) {
@@ -145,7 +157,7 @@ const renderMap = (voterData) => {
 
 const districtCounts = (voters) => {
   const counts = {};
-  for (let i = 0; i < NUM_DISTRICTS; i++) {
+  for (let i = 0; i < numDistricts; i++) {
     counts[i] = 0;
   }
   voters.perVoter((voter) => {
@@ -159,7 +171,7 @@ const renderDistrictSelectorPanel = (districtCounts) => {
   const districtSelectorPanel = document.createElement('div');
   districtSelectorPanel.id = 'districtSelectorPanel';
 
-  for (let i = 0; i < NUM_DISTRICTS; i++) {
+  for (let i = 0; i < numDistricts; i++) {
     const districtSelector = document.createElement('div');
     districtSelector.innerHTML = String(districtCounts[i]);
     districtSelector.classList.add('districtSelector');
@@ -205,7 +217,7 @@ const renderVoter = (voterData) => {
 
 const runGeneral = () => {
   const voteCount = {};
-  for (let i = 0; i < NUM_DISTRICTS; i++) {
+  for (let i = 0; i < numDistricts; i++) {
     voteCount[i] = {'dem': 0, 'rep': 0};
   }
   voters.perVoter((voter) => {
@@ -220,7 +232,7 @@ const runGeneral = () => {
     }
   });
 
-  for (let i = 0; i < NUM_DISTRICTS; i++) {
+  for (let i = 0; i < numDistricts; i++) {
     if (voteCount[i]['dem'] === voteCount[i]['rep']) {
       $('#sim').innerHTML = 'error; see console';
       throw('tie!');
@@ -235,9 +247,7 @@ const runGeneral = () => {
   render();
 };
 
-const regenerate = () => {
-  generate(Number($('#percentDem').value));
-};
+const regenerate = () => { generate(); };
 
 // const clearReps = () => {
 //   perDistrict((districtData) => {
@@ -285,10 +295,10 @@ const dsStyle = (districtId) => {
 
 const applyDynamicStyles = () => {
   let styleText = '';
-  for (let distId = 0; distId < NUM_DISTRICTS; distId++) {
+  for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
-  for (let distId = 0; distId < NUM_DISTRICTS; distId++) {
+  for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
   let styleEl = document.createElement('style');
@@ -299,7 +309,5 @@ const applyDynamicStyles = () => {
 // KICKOFF
 
 window.onload = (e) => {
-  applyDynamicStyles();
   generate();
-  render();
 };

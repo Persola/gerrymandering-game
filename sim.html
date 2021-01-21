@@ -5,11 +5,17 @@
     <div id="controls">
       <!-- <button onClick="runPrimary()">primary</button> -->
       <label for="percentDem">% Democrat</label>
-      <input type="text" id="percentDem" name="percentDem">
+      <input type="text" id="percentDem" name="percentDem" value="0.5">
+      <br />
+      <label for="rootNumDistConfig">Root number of districts</label>
+      <input type="text" id="rootNumDistConfig" name="rootNumDistConfig" value="4">
+      <br />
+      <label for="rootVotersPerDist">Root number of voters per district</label>
+      <input type="text" id="rootVotersPerDist" name="rootVotersPerDist" value="3">
       <br />
       <button onClick="regenerate()">regenerate</button>
-      <br />
-      <button onClick="runGeneral()">general</button>
+      <!-- <br />
+      <button onClick="runGeneral()">general</button> -->
     </div>
     <div id="sim"></div>
   </body>
