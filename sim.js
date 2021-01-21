@@ -1,6 +1,4 @@
 const PARTIES = ['dem', 'rep'];
-// const NO_REP = 'no_representative'
-// const VOTE_WITH_PARTY_RATE = 1.0;
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
@@ -51,14 +49,13 @@ voters.perVoter = (lambda) => {
   }
 };
 
-// DATA GENERATION/ALTERATION
+// INITIALIZATION/RESET FROM CONFIG
 
 const generate = () => {
   percentDem = Number($('#percentDem').value);
   rootNumDistricts = Number($('#rootNumDistConfig').value);
   rootVotersPerDistrict = Number($('#rootVotersPerDist').value);
 
-  // derived constants here because they are configurable
   numDistricts = rootNumDistricts**2;
   rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;
   if (numDistricts > Object.keys(DIST_ID_TO_COLOR).length) {
@@ -71,6 +68,7 @@ const generate = () => {
   
   generateVoters();
   applyDynamicStyles();
+  render();
 };
 
 const generateVoters = () => {
@@ -87,14 +85,14 @@ const generateVoters = () => {
   voterAffiliations = shuffle(voterAffiliations);
 
   voters.length = 0;
-  for (let i = 0; i < rootTotalVoters; i++) {
-    voters[i] = [];
+  for (let mapYCoord = 0; mapYCoord < rootTotalVoters; mapYCoord++) {
+    voters[mapYCoord] = [];
 
-    for (let j = 0; j < rootTotalVoters; j++) {
-      voters[i][j] = {
-        voterId: [i, j],
+    for (let mapXCoord = 0; mapXCoord < rootTotalVoters; mapXCoord++) {
+      voters[mapYCoord][mapXCoord] = {
+        voterId: [mapYCoord, mapXCoord],
         partyAffiliation: voterAffiliations.pop(),
-        districtId: assignDistrictId(i, j)
+        districtId: assignDistrictId(mapYCoord, mapXCoord)
       };
     }
   }
@@ -157,11 +155,13 @@ const renderMap = (voterData) => {
 
 const districtCounts = (voters) => {
   const counts = {};
-  for (let i = 0; i < numDistricts; i++) {
-    counts[i] = 0;
+  for (let distId = 0; distId < numDistricts; distId++) {
+    counts[distId] = {};
+    counts[distId][PARTIES[0]] = 0;
+    counts[distId][PARTIES[1]] = 0;
   }
   voters.perVoter((voter) => {
-    counts[voter.districtId] += 1;
+    counts[voter.districtId][voter.partyAffiliation] += 1;
   });
 
   return counts;
@@ -171,28 +171,26 @@ const renderDistrictSelectorPanel = (districtCounts) => {
   const districtSelectorPanel = document.createElement('div');
   districtSelectorPanel.id = 'districtSelectorPanel';
 
-  for (let i = 0; i < numDistricts; i++) {
+  for (let distId = 0; distId < numDistricts; distId++) {
     const districtSelector = document.createElement('div');
-    districtSelector.innerHTML = String(districtCounts[i]);
-    districtSelector.classList.add('districtSelector');
-    districtSelector.classList.add(representatives[i]);
-    districtSelector.setAttribute('data-district-id', i);
+    districtSelector.classList.add('districtSelector', representatives[distId]);
+    districtSelector.setAttribute('data-district-id', distId);
+    const demCount = districtCounts[distId][PARTIES[0]];
+    const repCount = districtCounts[distId][PARTIES[1]];
+    districtSelector.innerHTML = `${renderDemCount(demCount)} + ${renderRepCount(repCount)} = ${demCount + repCount}`;
+    if (demCount > repCount) {
+      districtSelector.classList.add('dem');
+    } else if (repCount > demCount) {
+      districtSelector.classList.add('rep');
+    }
     districtSelectorPanel.appendChild(districtSelector);
   }
 
   return districtSelectorPanel;
 };
 
-// const renderRepresentative = (repData) => {
-//   if(PARTIES.indexOf(repData) === -1 && repData !== NO_REP) {
-//     throw('bad rep')
-//   }
-// 
-//   const repDOM = document.createElement('div');
-//   repDOM.setAttribute('class', 'representative');
-//   repDOM.classList.add(repData);
-//   return repDOM;
-// };
+const renderDemCount = (count) => { return `<span class="demCount">${count}</span>`};
+const renderRepCount = (count) => { return `<span class="repCount">${count}</span>` };
 
 const renderVoter = (voterData) => {
   if(PARTIES.indexOf(voterData.partyAffiliation) === -1) { throw('bad affiliation') }
@@ -203,58 +201,8 @@ const renderVoter = (voterData) => {
   const voterAffilEl = document.createElement('div');
   voterAffilEl.classList.add('voterAffiliation', voterData.partyAffiliation);
   voterDOM.appendChild(voterAffilEl);
-  // if (voterData.lastVoted === 'dem') {
-  //   voterDOM.classList.add('lastVotedDem');
-  // } else if (voterData.lastVoted === 'rep') {
-  //   voterDOM.classList.add('lastVotedRep');
-  // } else {
-  //   voterDOM.classList.add('noLastVote');
-  // }
   return voterDOM;
 };
-
-// RUN SIMULATION EVENTS
-
-const runGeneral = () => {
-  const voteCount = {};
-  for (let i = 0; i < numDistricts; i++) {
-    voteCount[i] = {'dem': 0, 'rep': 0};
-  }
-  voters.perVoter((voter) => {
-    const isDem = voter.partyAffiliation === 'dem';
-    const votesWithParty = Math.random() < VOTE_WITH_PARTY_RATE;
-    if (isDem === votesWithParty) {
-      voteCount[voter.districtId]['dem'] ++;
-      voter.lastVoted = 'dem';
-    } else {
-      voteCount[voter.districtId]['rep'] ++;
-      voter.lastVoted = 'rep';
-    }
-  });
-
-  for (let i = 0; i < numDistricts; i++) {
-    if (voteCount[i]['dem'] === voteCount[i]['rep']) {
-      $('#sim').innerHTML = 'error; see console';
-      throw('tie!');
-    };
-    if (voteCount[i]['dem'] > voteCount[i]['rep']) {
-      representatives[i] = 'dem';
-    } else {
-      representatives[i] = 'rep';    
-    }
-  }
-
-  render();
-};
-
-const regenerate = () => { generate(); };
-
-// const clearReps = () => {
-//   perDistrict((districtData) => {
-//     districtData.representative = NO_REP;
-//   });
-//   render();
-// };
 
 // USER ACTIONS
 
@@ -284,20 +232,17 @@ const assignVoterToDistrict = (voterId, districtId) => {
   voters[voterId[0]][voterId[1]].districtId = districtId;
 };
 
-// STYLING
+// DYNAMIC STYLING
 
 const dsStyle = (districtId) => {
   return `
-    .districtSelector[data-district-id="${districtId}"] { border: 5px solid #${DIST_ID_TO_COLOR[districtId]}; }
+    .districtSelector[data-district-id="${districtId}"] { border: 8px solid #${DIST_ID_TO_COLOR[districtId]}; }
     .district-${districtId} { background-color: #${DIST_ID_TO_COLOR[districtId]}; }
   `
 };
 
 const applyDynamicStyles = () => {
   let styleText = '';
-  for (let distId = 0; distId < numDistricts; distId++) {
-    styleText += dsStyle(distId);
-  }
   for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
