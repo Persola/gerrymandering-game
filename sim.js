@@ -2,27 +2,27 @@ const PARTIES = ['dem', 'rep'];
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
-  2: 'f58634',
+  2: 'fa963d',
   3: 'ffcc29',
-  4: '14019f',
-  5: 'af0069',
-  6: 'fe9bd8',
-  7: 'f6c065',
+  4: '8040b0',
+  5: 'd860b0',
+  6: 'fa9bd0',
+  7: '966060',
   8: '11698e',
-  9: '708108',
-  10: '663f3f',
-  11: '8b5e83',
+  9: '608040',
+  10: 'f6c065',
+  11: '8b6ea3',
   12: 'eb596e',
   13: '9dad7f',
   14: 'e27802',
-  15: 'ec4646',
+  15: '51a2b5',
   16: 'd6b0b1',
-  17: '51c2d5',
+  17: 'ec4646',
   18: '007965',
   19: '4d375d',
   20: 'f1aa9b',
   21: '557174',
-  22: '96bb7c',
+  22: '96cb7c',
   23: '007981',
   24: 'f8dc81'
 };
@@ -213,7 +213,11 @@ document.body.onclick = function(e) {   //when the document body is clicked
     onVoterClick(e.target);
   }
 
-  if (e.target.className && e.target.className.indexOf('districtSelector') != -1) {
+  if (e.target.className && e.target.className.indexOf('demCount') != -1) {
+    selectedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'))
+  } else if (e.target.className && e.target.className.indexOf('repCount') != -1) {
+    selectedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'))
+  } else if (e.target.className && e.target.className.indexOf('districtSelector') != -1) {
     selectedDistrictId = Number(e.target.getAttribute('data-district-id'))
   }
 
