@@ -141,8 +141,8 @@ const render = () => {
 const renderMap = (voterData) => {
   const mapDom = document.createElement('div');
   mapDom.id = 'map';
-  mapDom.style['grid-template-rows'] = '30px '.repeat(rootTotalVoters);
-  mapDom.style['grid-template-columns'] = '30px '.repeat(rootTotalVoters);
+  mapDom.style['grid-template-rows'] = '60px '.repeat(rootTotalVoters);
+  mapDom.style['grid-template-columns'] = '60px '.repeat(rootTotalVoters);
 
   for (voterRowData of voterData) {
     for (voterData of voterRowData) {
@@ -170,6 +170,8 @@ const districtCounts = (voters) => {
 const renderDistrictSelectorPanel = (districtCounts) => {
   const districtSelectorPanel = document.createElement('div');
   districtSelectorPanel.id = 'districtSelectorPanel';
+  // districtSelectorPanel.style['grid-template-rows'] = '120px '.repeat(rootNumDistricts);
+  // districtSelectorPanel.style['grid-template-columns'] = '60px '.repeat(rootNumDistricts);
 
   for (let distId = 0; distId < numDistricts; distId++) {
     const districtSelector = document.createElement('div');
@@ -240,7 +242,7 @@ const assignVoterToDistrict = (voterId, districtId) => {
 
 const dsStyle = (districtId) => {
   return `
-    .districtSelector[data-district-id="${districtId}"] { border: 8px solid #${DIST_ID_TO_COLOR[districtId]}; }
+    .districtSelector[data-district-id="${districtId}"] { border: 16px solid #${DIST_ID_TO_COLOR[districtId]}; }
     .district-${districtId} { background-color: #${DIST_ID_TO_COLOR[districtId]}; }
   `
 };
@@ -250,6 +252,7 @@ const applyDynamicStyles = () => {
   for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
+  styleText += ` #districtSelectorPanel { width: ${180 * rootNumDistricts}px; } `;
   let styleEl = document.createElement('style');
   styleEl.innerHTML = styleText;
   $('script').parentNode.insertBefore(styleEl, $('script'));
