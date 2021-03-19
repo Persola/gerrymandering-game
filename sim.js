@@ -1,4 +1,4 @@
-const PARTIES = ['dem', 'rep'];
+const PARTY_NAMES = ['party1', 'party2'];
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
@@ -32,7 +32,7 @@ const $$ = document.querySelectorAll.bind(document);
 
 // GLOBALS
 
-let percentDem = 0.5;
+let percentFirstParty = 0.5;
 let rootNumDistricts = 4;
 let rootVotersPerDistrict = 3;
 let numDistricts = rootNumDistricts**2;
@@ -40,6 +40,9 @@ let rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;
 const voters = [];
 const representatives = {};
 let selectedDistrictId = null;
+const partyColors = {};
+partyColors[PARTY_NAMES[0]] = 'aa3';
+partyColors[PARTY_NAMES[1]] = 'b5c';
 
 voters.perVoter = (lambda) => {
   for (voterRow of voters) {
@@ -52,7 +55,7 @@ voters.perVoter = (lambda) => {
 // INITIALIZATION/RESET FROM CONFIG
 
 const generate = () => {
-  percentDem = Number($('#percentDem').value);
+  percentFirstParty = Number($('#percentFirstParty').value);
   rootNumDistricts = Number($('#rootNumDistConfig').value);
   rootVotersPerDistrict = Number($('#rootVotersPerDist').value);
 
@@ -62,8 +65,8 @@ const generate = () => {
     throw('I need more colors (add to DIST_ID_TO_COLOR)');
   }
 
-  if (percentDem === undefined) {
-    percentDem = 0.5;
+  if (percentFirstParty === undefined) {
+    percentFirstParty = 0.5;
   }
   
   generateVoters();
@@ -73,14 +76,14 @@ const generate = () => {
 
 const generateVoters = () => {
   let totalVoters = rootTotalVoters**2;
-  let numDemVoters = Math.floor(totalVoters * percentDem);
+  let numDemVoters = Math.floor(totalVoters * percentFirstParty);
   let numRepVoters = totalVoters - numDemVoters;
   let voterAffiliations = [];
   for (let demInd = 0; demInd < numDemVoters; demInd++) {
-    voterAffiliations.push(PARTIES[0]);
+    voterAffiliations.push(PARTY_NAMES[0]);
   }
   for (let repInd = 0; repInd < numRepVoters; repInd++) {
-    voterAffiliations.push(PARTIES[1]);
+    voterAffiliations.push(PARTY_NAMES[1]);
   }
   voterAffiliations = shuffle(voterAffiliations);
 
@@ -157,8 +160,8 @@ const districtCounts = (voters) => {
   const counts = {};
   for (let distId = 0; distId < numDistricts; distId++) {
     counts[distId] = {};
-    counts[distId][PARTIES[0]] = 0;
-    counts[distId][PARTIES[1]] = 0;
+    counts[distId][PARTY_NAMES[0]] = 0;
+    counts[distId][PARTY_NAMES[1]] = 0;
   }
   voters.perVoter((voter) => {
     counts[voter.districtId][voter.partyAffiliation] += 1;
@@ -177,8 +180,8 @@ const renderDistrictSelectorPanel = (districtCounts) => {
     const districtSelector = document.createElement('div');
     districtSelector.classList.add('districtSelector', representatives[distId]);
     districtSelector.setAttribute('data-district-id', distId);
-    const demCount = districtCounts[distId][PARTIES[0]];
-    const repCount = districtCounts[distId][PARTIES[1]];
+    const demCount = districtCounts[distId][PARTY_NAMES[0]];
+    const repCount = districtCounts[distId][PARTY_NAMES[1]];
     districtSelector.innerHTML = `${renderDemCount(demCount)} + ${renderRepCount(repCount)} = ${demCount + repCount}`;
     if (demCount > repCount) {
       districtSelector.classList.add('dem');
@@ -195,7 +198,7 @@ const renderDemCount = (count) => { return `<span class="demCount">${count}</spa
 const renderRepCount = (count) => { return `<span class="repCount">${count}</span>` };
 
 const renderVoter = (voterData) => {
-  if(PARTIES.indexOf(voterData.partyAffiliation) === -1) { throw('bad affiliation') }
+  if(PARTY_NAMES.indexOf(voterData.partyAffiliation) === -1) { throw('bad affiliation') }
 
   const voterDOM = document.createElement('div');
   voterDOM.classList.add('voter', `district-${voterData.districtId}`);
@@ -252,7 +255,9 @@ const applyDynamicStyles = () => {
   for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
-  styleText += ` #districtSelectorPanel { width: ${180 * rootNumDistricts}px; } `;
+  styleText += `\n#districtSelectorPanel { width: ${180 * rootNumDistricts}px; }`;
+  styleText += `\n.${PARTY_NAMES[0]} { background-color: #${partyColors[PARTY_NAMES[0]]}; }`;
+  styleText += `\n.${PARTY_NAMES[1]} { background-color: #${partyColors[PARTY_NAMES[1]]}; }`;
   let styleEl = document.createElement('style');
   styleEl.innerHTML = styleText;
   $('script').parentNode.insertBefore(styleEl, $('script'));
