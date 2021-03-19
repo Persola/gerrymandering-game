@@ -59,25 +59,21 @@ input {
 }
 
 .myButton {
-	box-shadow:inset 0px 1px 6px 0px #f9eca0;
-	background:linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
-	background-color:#f0c911;
-	border:2px solid #e65f44;
-	display:inline-block;
-	cursor:pointer;
-	color:#c92200;
-	font-family:Trebuchet MS;
-	font-size:15px;
-	font-weight:bold;
-	padding:9px 18px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #ded17c;
+	background-color: #f0c911;
+	border: 2px solid #e65f44;
+	cursor: pointer;
+	color: #c92200;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 9px 18px;
+	text-decoration: none;
 }
 .myButton:hover {
-	background:linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
-	background-color:#f2ab1e;
+	background-color: #f4d415;
+  border: 2px solid #ea5030;
 }
 .myButton:active {
-	position:relative;
-	top:1px;
+	position: relative;
+	top: 1px;
 }

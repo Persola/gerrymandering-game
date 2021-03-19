@@ -41,8 +41,8 @@ const voters = [];
 const representatives = {};
 let selectedDistrictId = null;
 const partyColors = {};
-partyColors[PARTY_NAMES[0]] = 'aa3';
-partyColors[PARTY_NAMES[1]] = 'b5c';
+partyColors[PARTY_NAMES[0]] = $('#party1color').value;
+partyColors[PARTY_NAMES[1]] = $('#party2color').value;
 
 voters.perVoter = (lambda) => {
   for (voterRow of voters) {
@@ -173,8 +173,6 @@ const districtCounts = (voters) => {
 const renderDistrictSelectorPanel = (districtCounts) => {
   const districtSelectorPanel = document.createElement('div');
   districtSelectorPanel.id = 'districtSelectorPanel';
-  // districtSelectorPanel.style['grid-template-rows'] = '120px '.repeat(rootNumDistricts);
-  // districtSelectorPanel.style['grid-template-columns'] = '60px '.repeat(rootNumDistricts);
 
   for (let distId = 0; distId < numDistricts; distId++) {
     const districtSelector = document.createElement('div');
@@ -211,23 +209,30 @@ const renderVoter = (voterData) => {
 
 // USER ACTIONS
 
-document.body.onclick = function(e) {   //when the document body is clicked
-  if (e.target.className && e.target.className.indexOf('voterAffiliation') != -1) {
+document.body.onclick = (e) => {
+  if (targetHasClass('voterAffiliation', e)) {
     onVoterClick(e.target.parentElement);
-  } else if (e.target.className && e.target.className.indexOf('voter ') != -1) {
+  } else if (targetHasClass('voter', e)) {
     onVoterClick(e.target);
   }
 
-  if (e.target.className && e.target.className.indexOf('demCount') != -1) {
+  if (targetHasClass('demCount', e)) {
     selectedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'))
-  } else if (e.target.className && e.target.className.indexOf('repCount') != -1) {
+  } else if (targetHasClass('repCount', e)) {
     selectedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'))
-  } else if (e.target.className && e.target.className.indexOf('districtSelector') != -1) {
+  } else if (targetHasClass('districtSelector', e)) {
     selectedDistrictId = Number(e.target.getAttribute('data-district-id'))
   }
 
   render();
 }
+
+const targetHasClass = (className, evnt) => {
+  return (
+    evnt.target.className &&
+    evnt.target.className.indexOf(className) != -1
+  )
+};
 
 const onVoterClick = (target) => {
   const idMatch = target.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
@@ -240,6 +245,15 @@ const onVoterClick = (target) => {
 const assignVoterToDistrict = (voterId, districtId) => {
   voters[voterId[0]][voterId[1]].districtId = districtId;
 };
+
+const partyColorPickers = $$('.partyColorPicker');
+for (pickerInd in partyColorPickers) {
+  partyColorPickers[pickerInd].onchange = (e) => {
+    partyColors[PARTY_NAMES[0]] = $('#party1color').value;
+    partyColors[PARTY_NAMES[1]] = $('#party2color').value;
+    applyDynamicStyles();
+  };
+}
 
 // DYNAMIC STYLING
 
@@ -256,8 +270,8 @@ const applyDynamicStyles = () => {
     styleText += dsStyle(distId);
   }
   styleText += `\n#districtSelectorPanel { width: ${180 * rootNumDistricts}px; }`;
-  styleText += `\n.${PARTY_NAMES[0]} { background-color: #${partyColors[PARTY_NAMES[0]]}; }`;
-  styleText += `\n.${PARTY_NAMES[1]} { background-color: #${partyColors[PARTY_NAMES[1]]}; }`;
+  styleText += `\n.${PARTY_NAMES[0]} { background-color: ${partyColors[PARTY_NAMES[0]]}; }`;
+  styleText += `\n.${PARTY_NAMES[1]} { background-color: ${partyColors[PARTY_NAMES[1]]}; }`;
   let styleEl = document.createElement('style');
   styleEl.innerHTML = styleText;
   $('script').parentNode.insertBefore(styleEl, $('script'));
