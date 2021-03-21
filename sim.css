@@ -10,25 +10,10 @@ body {
   font-size: 18px;
 }
 
-#columnWrapper {
-  display: flex;
-}
-
-#columnWrapper>* {
-  margin: 0 10px;
-  flex: 1;
-}
-
-input {
-  background-color: var(--bg-color);
-  color: var(--font-color);
-  font-size: 20px;
-}
-
 #title {
   height: 30px;
   width: 92%;
-  margin: 0 2%;
+  margin: 0 1%;
   font-family: Trebuchet MS;
   font-size: 28px;
   font-weight: bold;
@@ -39,12 +24,19 @@ input {
   padding: 10px 14px;
 }
 
+#columnWrapper {
+  display: flex;
+}
+
 #controls {
-  margin: 20px;
+  margin: 10px 0 10px 20px;
+  flex-grow: 0;
+  flex-basis: 310px;
+  min-width: 310px;
 }
 
 .controlLine {
-  margin: 6px 0;  
+  margin: 6px 0;
 }
 
 .button {
@@ -52,13 +44,18 @@ input {
   width: 120px;
 }
 
+#sim {
+  flex-grow: 1;
+  margin: 20px;
+}
+
 #map {
   display: grid;
-  margin-left: 40px;
 }
 
 .voter {
   position: relative; /* for pop up absolute positioning */
+  background-color: #f00; /* to be overwritten by per-district styles */
 }
 
 .voterAffiliation {
@@ -78,12 +75,6 @@ input {
   margin-left: 80px;
   background-color: #222;
 }
-
-#sim {
-  display: flex;
-  margin: 20px;
-}
-
 .districtSelector {
   height: 30px;
   text-align: center;
@@ -144,8 +135,25 @@ input {
   color: #888;
 }
 
-.controlLine>input {
+.controlLine>input,select {  
+  border: 1px solid #888;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  font-size: 20px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.controlLine>select {  
   width: 60px;
+}
+
+.controlLine>input[type=color] {  
+  width: 50px;
+}
+
+#percentParty0,#percentParty1 {  
+  width: 70px;
 }
 
 .regenerateButtonWrapper {

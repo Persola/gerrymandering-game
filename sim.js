@@ -31,11 +31,12 @@ const $$ = document.querySelectorAll.bind(document);
 
 // GLOBALS
 
-let percentFirstParty = 0.5;
-let rootNumDistricts = 3;
-let rootVotersPerDistrict = 3;
-let numDistricts = rootNumDistricts**2;
-let rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;  
+let percentParty0 = 0.5;
+let numDistricts = Number($('#numDist').value);
+let rootNumDistricts = numDistricts**(1/2);
+let votersPerDistrict = Number($('#votersPerDist').value);
+let rootNumVotersPerDistrict = votersPerDistrict**(1/2);
+let rootTotalVoters = rootNumDistricts * rootNumVotersPerDistrict;  
 const voters = [];
 const representatives = {};
 let selectedDistrictId = null;
@@ -56,18 +57,19 @@ voters.perVoter = (lambda) => {
 // INITIALIZATION/RESET FROM CONFIG
 
 const generate = () => {
-  percentFirstParty = Number($('#percentFirstParty').value);
-  rootNumDistricts = Number($('#rootNumDistConfig').value);
-  rootVotersPerDistrict = Number($('#rootVotersPerDist').value);
+  percentParty0 = Number($('#percentParty0').value);
+  numDistricts = Number($('#numDist').value);
+  votersPerDistrict = Number($('#votersPerDist').value);
 
-  numDistricts = rootNumDistricts**2;
-  rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;
+  rootNumDistricts = numDistricts**(1/2);
+  rootNumVotersPerDistrict = votersPerDistrict**(1/2);
+  rootTotalVoters = rootNumDistricts * rootNumVotersPerDistrict;
   if (numDistricts > Object.keys(DIST_ID_TO_COLOR).length) {
     throw('I need more colors (add to DIST_ID_TO_COLOR)');
   }
 
-  if (percentFirstParty === undefined) {
-    percentFirstParty = 0.5;
+  if (percentParty0 === undefined) {
+    percentParty0 = 0.5;
   }
   
   generateVoters();
@@ -77,7 +79,7 @@ const generate = () => {
 
 const generateVoters = () => {
   let totalVoters = rootTotalVoters**2;
-  let numParty0Voters = Math.floor(totalVoters * percentFirstParty);
+  let numParty0Voters = Math.floor(totalVoters * percentParty0);
   let numParty1Voters = totalVoters - numParty0Voters;
   let voterAffiliations = [];
   for (let party0Ind = 0; party0Ind < numParty0Voters; party0Ind++) {
@@ -121,15 +123,16 @@ const assignDistrictId = (x, y) => {
   for (let xDistCoord = 0; xDistCoord < rootNumDistricts; xDistCoord++) {
     for (let yDistCoord = 0; yDistCoord < rootNumDistricts; yDistCoord++) {
       if (
-        (x >= rootVotersPerDistrict * xDistCoord) &&
-        (x < rootVotersPerDistrict * (xDistCoord + 1)) &&
-        (y >= rootVotersPerDistrict * yDistCoord) &&
-        (y < rootVotersPerDistrict * (yDistCoord + 1))
+        (x >= rootNumVotersPerDistrict * xDistCoord) &&
+        (x < rootNumVotersPerDistrict * (xDistCoord + 1)) &&
+        (y >= rootNumVotersPerDistrict * yDistCoord) &&
+        (y < rootNumVotersPerDistrict * (yDistCoord + 1))
       ) {
         return (xDistCoord * rootNumDistricts) + yDistCoord;
       }
     }
   }
+  TypeError('voter coords have no corresponding district!?');
 };
 
 // RENDER
@@ -203,11 +206,12 @@ const partyCount = (partyInd, count, win, tie) => {
   } else { // loses
     declaration = '';
   }
+  const declarationColor = tie ? '#bb9' : partyColors[partyInd];
   return `
     <div class="partyCount">
       <div class="partyColorDot" style="background-color: ${partyColors[partyInd]}"></div>
       <div class="countBox">${count}</div>
-      <div class="declaration" style="color: ${partyColors[partyInd]}">${declaration}</div>
+      <div class="declaration" style="color: ${declarationColor}">${declaration}</div>
     </div>
   `;
 };
@@ -311,19 +315,34 @@ for (pickerInd in partyColorPickers) {
 const dsStyle = (districtId) => {
   return `
     .district-${districtId} { background-color: #${DIST_ID_TO_COLOR[districtId]}; }
-  `
+  `;
+};
+
+const partySplitInputBackgroundStyles = () => {
+    return `
+      .controlLine>input[class=party0] {
+        background-color: ${partyColors[0]}88;
+      }
+
+      .controlLine>input[class=party1] {
+        background-color: ${partyColors[1]}88;
+      }
+    `;
 };
 
 const applyDynamicStyles = () => {
+  const oldStyleEl = $('.dynamicStyleEl');
   let styleText = '';
   for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
   styleText += `\n.party0 { background-color: ${partyColors[0]}; }`;
   styleText += `\n.party1 { background-color: ${partyColors[1]}; }`;
-  let styleEl = document.createElement('style');
-  styleEl.innerHTML = styleText;
-  $('script').parentNode.insertBefore(styleEl, $('script'));
+  styleText += partySplitInputBackgroundStyles();
+  let newStyleEl = document.createElement('style');
+  newStyleEl.classList.add('dynamicStyleEl');
+  newStyleEl.innerHTML = styleText;
+  oldStyleEl.parentElement.replaceChild(newStyleEl, oldStyleEl);
 };
 
 // KICKOFF
