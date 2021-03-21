@@ -45,6 +45,7 @@ let modifierKeyDown = false;
 const partyColors = {};
 partyColors[0] = $('#party0color').value;
 partyColors[1] = $('#party1color').value;
+let invalidHeadcountDistrictIds = [];
 
 voters.perVoter = (lambda) => {
   for (voterRow of voters) {
@@ -301,6 +302,20 @@ const onVoterClick = (voter) => {
 
 const assignVoterToDistrict = (voterId, districtId) => {
   voters[voterId[0]][voterId[1]].districtId = districtId;
+  checkDistrictSizes();
+};
+
+const checkDistrictSizes = () => {
+  invalidHeadcountDistrictIds.length = 0;
+  const counts = districtCounts(voters);
+  for (let distId = 0; distId < numDistricts; distId++) {
+    const distCount = counts[distId];
+    const distTotal = distCount[0] + distCount[1];
+    if (Math.abs(votersPerDistrict - distTotal) > 1) {
+      invalidHeadcountDistrictIds.push(distId);
+    }
+  }
+  applyDynamicStyles();
 };
 
 const updatePartyColors = (e) => {
@@ -331,10 +346,26 @@ document.body.onchange = (e) => {
 }
 // DYNAMIC STYLING
 
-const dsStyle = (districtId) => {
-  return `
-    .district-${districtId} { background-color: #${DIST_ID_TO_COLOR[districtId]}; }
-  `;
+const dsStyle = (districtId, invalidHeadcount) => {
+  if (invalidHeadcount) {
+    return `
+      .district-${districtId} {
+        background-image: repeating-linear-gradient(
+          -45deg,
+          #${DIST_ID_TO_COLOR[districtId]},
+          #${DIST_ID_TO_COLOR[districtId]} 10.675px,
+          #f00 10.675px,
+          #f00 21.25px
+        );
+      }
+    `;    
+  } else {
+    return `
+      .district-${districtId} {
+        background-color: #${DIST_ID_TO_COLOR[districtId]};
+      }
+    `;
+  }
 };
 
 const partySplitInputBackgroundStyles = () => {
@@ -353,7 +384,7 @@ const applyDynamicStyles = () => {
   const oldStyleEl = $('.dynamicStyleEl');
   let styleText = '';
   for (let distId = 0; distId < numDistricts; distId++) {
-    styleText += dsStyle(distId);
+    styleText += dsStyle(distId, invalidHeadcountDistrictIds.includes(distId));
   }
   styleText += `\n.party0 { background-color: ${partyColors[0]}; }`;
   styleText += `\n.party1 { background-color: ${partyColors[1]}; }`;
