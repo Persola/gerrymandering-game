@@ -271,6 +271,9 @@ document.body.onclick = (e) => {
     onVoterClick(e.target.parentElement);
   } else if (targetHasClass('voter', e)) {
     onVoterClick(e.target);
+  } else {
+    selectedDistrictId = null;
+    setCursor(null);
   }
 
   render();
@@ -286,6 +289,7 @@ const targetHasClass = (className, evnt) => {
 const onVoterClick = (voter) => {
   if (modifierKeyDown) { // select paint color (district)
     selectedDistrictId = Number(voter.getAttribute('data-district-id'))
+    setCursor(DIST_ID_TO_COLOR[selectedDistrictId]);
   } else { // paint
     const idMatch = voter.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
     const voterId = [Number(idMatch[1]), Number(idMatch[2])]
@@ -343,6 +347,14 @@ const applyDynamicStyles = () => {
   newStyleEl.classList.add('dynamicStyleEl');
   newStyleEl.innerHTML = styleText;
   oldStyleEl.parentElement.replaceChild(newStyleEl, oldStyleEl);
+};
+
+const setCursor = (color) => {
+  if (! color) {
+    $('body').style.cursor = 'default';
+  } else {
+    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='24'%20width='16'%3E%20%20%3Cpolygon%20points='2,2%2014,17%202,22'%20fill='%23${color}'%20stroke='black'%20stroke-width='1.5'/%3E%3C/svg%3E") 0 0, default`;
+  }
 };
 
 // KICKOFF
