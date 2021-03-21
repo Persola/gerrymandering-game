@@ -2,49 +2,65 @@
 <html>
   <link rel="stylesheet" href="sim.css">
   <body>
-    <div id="controls">
-      <div class="controlLine">
-        <datalist id="partyColorOptions">
-          <option>#aaaa33</option>
-          <option>#a866a8</option>
-          <option>#dd8844</option>
-          <option>#50a0bb</option>
-        </datalist>
-        Party Colors
-        <input
-          type="color"
-          id="party1color"
-          name="party1color"
-          value="#aaaa33"
-          class="partyColorPicker"
-          list="partyColorOptions"
-        >
-        <input
-          type="color"
-          id="party2color"
-          name="party2color"
-          value="#a866a8"
-          class="partyColorPicker"
-          list="partyColorOptions"
-        >
+    <input type="text" id="title" name="title" maxlength="80" value="GERRYMANDERING">
+    <div id="columnWrapper">
+      <div id="controls">
+        <div class="controlLine">
+          <datalist id="partyColorOptions">
+            <option>#aaaa33</option>
+            <option>#a866a8</option>
+            <option>#dd8844</option>
+            <option>#50a0bb</option>
+          </datalist>
+          Party Colors:
+          <input
+            type="color"
+            id="party0color"
+            name="party0color"
+            value="#aaaa33"
+            class="partyColorPicker"
+            list="partyColorOptions"
+          >
+          <input
+            type="color"
+            id="party1color"
+            name="party1color"
+            value="#a866a8"
+            class="partyColorPicker"
+            list="partyColorOptions"
+          >
+        </div>
+        <div class="controlLine">
+          <label for="percentFirstParty">Party Split Percentages: </label>
+          <input type="text" id="percentFirstParty" name="percentFirstParty" value="0.5">
+        </div>
+        <div class="controlLine">
+          <label for="rootNumDistConfig">Root number of districts</label>
+          <input type="text" id="rootNumDistConfig" name="rootNumDistConfig" value="4">
+        </div>
+        <div class="controlLine">
+          <label for="rootVotersPerDist">Root number of voters per district</label>
+          <input type="text" id="rootVotersPerDist" name="rootVotersPerDist" value="3">
+        </div>
+        <div class="regenerateButtonWrapper">
+          <a href="#" class="regenerateButton" onClick="generate()">REGENERATE</a>
+        </div>
+        Results
+        <br />
+        [party] controls the house
+        <br />
+        [party] controls x seats
+        <br />
+        [party] controls x seats
+        <br />
+        District Panel
+        <br />
+        hover over a district to see a voter count
+        <br />
+        Press Alt (⎇) while clicking to select a district's color
       </div>
-      <div class="controlLine">
-        <label for="percentFirstParty">Party Split Percentage</label>
-        <input type="text" id="percentFirstParty" name="percentFirstParty" value="0.5">
-      </div>
-      <div class="controlLine">
-        <label for="rootNumDistConfig">Root number of districts</label>
-        <input type="text" id="rootNumDistConfig" name="rootNumDistConfig" value="4">
-      </div>
-      <div class="controlLine">
-        <label for="rootVotersPerDist">Root number of voters per district</label>
-        <input type="text" id="rootVotersPerDist" name="rootVotersPerDist" value="3">
-      </div>
-      <div class="regenerateButtonWrapper">
-        <a href="#" class="regenerateButton" onClick="generate()">REGENERATE</a>
-      </div>
+      <div id="sim"></div>
     </div>
-    <div id="sim"></div>
   </body>
   <script src="./sim.js">
   </script>

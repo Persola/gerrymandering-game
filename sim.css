@@ -8,10 +8,13 @@ body {
   color: var(--font-color);
   font-family: Tahoma, sans-serif;
   font-size: 18px;
+}
+
+#columnWrapper {
   display: flex;
 }
 
-body>* {
+#columnWrapper>* {
   margin: 0 10px;
   flex: 1;
 }
@@ -20,6 +23,20 @@ input {
   background-color: var(--bg-color);
   color: var(--font-color);
   font-size: 20px;
+}
+
+#title {
+  height: 30px;
+  width: 92%;
+  margin: 0 2%;
+  font-family: Trebuchet MS;
+  font-size: 28px;
+  font-weight: bold;
+  color: #bbb;
+  border: none;
+  /* background-color: #333; */
+  background-image: linear-gradient(to right, #333 0%, #333 60%, #444 80%);
+  padding: 10px 14px;
 }
 
 #controls {
@@ -127,7 +144,7 @@ input {
   color: #888;
 }
 
-input {
+.controlLine>input {
   width: 60px;
 }
 

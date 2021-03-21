@@ -1,4 +1,3 @@
-const PARTY_NAMES = ['party1', 'party2'];
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
@@ -33,7 +32,7 @@ const $$ = document.querySelectorAll.bind(document);
 // GLOBALS
 
 let percentFirstParty = 0.5;
-let rootNumDistricts = 4;
+let rootNumDistricts = 3;
 let rootVotersPerDistrict = 3;
 let numDistricts = rootNumDistricts**2;
 let rootTotalVoters = rootNumDistricts * rootVotersPerDistrict;  
@@ -43,8 +42,8 @@ let selectedDistrictId = null;
 let hoveredDistrictId = null;
 let modifierKeyDown = false;
 const partyColors = {};
-partyColors[PARTY_NAMES[0]] = $('#party1color').value;
-partyColors[PARTY_NAMES[1]] = $('#party2color').value;
+partyColors[0] = $('#party0color').value;
+partyColors[1] = $('#party1color').value;
 
 voters.perVoter = (lambda) => {
   for (voterRow of voters) {
@@ -78,14 +77,14 @@ const generate = () => {
 
 const generateVoters = () => {
   let totalVoters = rootTotalVoters**2;
-  let numParty1Voters = Math.floor(totalVoters * percentFirstParty);
-  let numParty2Voters = totalVoters - numParty1Voters;
+  let numParty0Voters = Math.floor(totalVoters * percentFirstParty);
+  let numParty1Voters = totalVoters - numParty0Voters;
   let voterAffiliations = [];
-  for (let party1Ind = 0; party1Ind < numParty1Voters; party1Ind++) {
-    voterAffiliations.push(PARTY_NAMES[0]);
+  for (let party0Ind = 0; party0Ind < numParty0Voters; party0Ind++) {
+    voterAffiliations.push(0);
   }
-  for (let party2Ind = 0; party2Ind < numParty2Voters; party2Ind++) {
-    voterAffiliations.push(PARTY_NAMES[1]);
+  for (let party1Ind = 0; party1Ind < numParty1Voters; party1Ind++) {
+    voterAffiliations.push(1);
   }
   voterAffiliations = shuffle(voterAffiliations);
 
@@ -159,8 +158,8 @@ const districtCounts = (voters) => {
   const counts = {};
   for (let distId = 0; distId < numDistricts; distId++) {
     counts[distId] = {};
-    counts[distId][PARTY_NAMES[0]] = 0;
-    counts[distId][PARTY_NAMES[1]] = 0;
+    counts[distId][0] = 0;
+    counts[distId][1] = 0;
   }
   voters.perVoter((voter) => {
     counts[voter.districtId][voter.partyAffiliation] += 1;
@@ -170,19 +169,56 @@ const districtCounts = (voters) => {
 };
 
 const renderVoter = (voterData) => {
-  if(PARTY_NAMES.indexOf(voterData.partyAffiliation) === -1) { throw('bad affiliation') }
-
   const voterDOM = document.createElement('div');
   voterDOM.classList.add('voter', `district-${voterData.districtId}`);
   voterDOM.setAttribute('data-voter-id', `${voterData.voterId[0]}-${voterData.voterId[1]}`);
   voterDOM.setAttribute('data-district-id', voterData.districtId);
   const voterAffilEl = document.createElement('div');
-  voterAffilEl.classList.add('voterAffiliation', voterData.partyAffiliation);
+  voterAffilEl.classList.add('voterAffiliation', `party${voterData.partyAffiliation}`);
   voterDOM.appendChild(voterAffilEl);
   return voterDOM;
 };
 
+const districtPopUp = (distId) => {
+  const districtCount = districtCounts(voters)[distId];
+  const isTie = districtCount[0] === districtCount[1];
+  const party0Wins = districtCount[0] > districtCount[1];
+  const party1Wins = districtCount[0] < districtCount[1];
+  const distPopUpEl = document.createElement('div');
+  distPopUpEl.classList.add('districtPopUp');
+  distPopUpEl.innerHTML = `
+    <div class="districtTitle district-${distId}">district</div>
+    ${partyCount(0, districtCount[0], party0Wins, isTie)}
+    ${partyCount(1, districtCount[1], party1Wins, isTie)}
+  `;
+  return distPopUpEl;
+};
+
+const partyCount = (partyInd, count, win, tie) => {
+  let declaration;
+  if (tie) {
+    declaration = 'tie!';
+  } else if (win) {
+    declaration = 'winner';
+  } else { // loses
+    declaration = '';
+  }
+  return `
+    <div class="partyCount">
+      <div class="partyColorDot" style="background-color: ${partyColors[partyInd]}"></div>
+      <div class="countBox">${count}</div>
+      <div class="declaration" style="color: ${partyColors[partyInd]}">${declaration}</div>
+    </div>
+  `;
+};
+
 // USER ACTIONS
+
+$('#title').onchange = (e) => {
+  if (! /\S/.test($('#title').value)) {
+    $('#title').value = 'GERRYMANDERING';
+  }
+};
 
 document.addEventListener('keydown', (e) => {
   if (['AltLeft', 'AltRight'].includes(e.code)) {
@@ -217,39 +253,6 @@ const updateDistrictPopUp = (voter) => {
     voter.appendChild(districtPopUp(thisMoveHoveredDistrictId));
     hoveredDistrictId = thisMoveHoveredDistrictId;
   }
-};
-
-const districtPopUp = (distId) => {
-  const districtCount = districtCounts(voters)[distId];
-  const isTie = districtCount[PARTY_NAMES[0]] === districtCount[PARTY_NAMES[1]];
-  const party1Wins = districtCount[PARTY_NAMES[0]] > districtCount[PARTY_NAMES[1]];
-  const party2Wins = districtCount[PARTY_NAMES[0]] < districtCount[PARTY_NAMES[1]];
-  const distPopUpEl = document.createElement('div');
-  distPopUpEl.classList.add('districtPopUp');
-  distPopUpEl.innerHTML = `
-    <div class="districtTitle district-${distId}">district</div>
-    ${partyCount(0, districtCount[PARTY_NAMES[0]], party1Wins, isTie)}
-    ${partyCount(1, districtCount[PARTY_NAMES[1]], party2Wins, isTie)}
-  `;
-  return distPopUpEl;
-};
-
-const partyCount = (partyInd, count, win, tie) => {
-  let declaration;
-  if (tie) {
-    declaration = 'tie!';
-  } else if (win) {
-    declaration = 'winner';
-  } else { // loses
-    declaration = '';
-  }
-  return `
-    <div class="partyCount">
-      <div class="partyColorDot" style="background-color: ${partyColors[PARTY_NAMES[partyInd]]}"></div>
-      <div class="countBox">${count}</div>
-      <div class="declaration" style="color: ${partyColors[PARTY_NAMES[partyInd]]}">${declaration}</div>
-    </div>
-  `;
 };
 
 const removeAllDistrictPopUps = () => {
@@ -293,8 +296,8 @@ const assignVoterToDistrict = (voterId, districtId) => {
 };
 
 const updatePartyColors = (e) => {
-  partyColors[PARTY_NAMES[0]] = $('#party1color').value;
-  partyColors[PARTY_NAMES[1]] = $('#party2color').value;
+  partyColors[0] = $('#party0color').value;
+  partyColors[1] = $('#party1color').value;
   applyDynamicStyles();
 };
 
@@ -316,8 +319,8 @@ const applyDynamicStyles = () => {
   for (let distId = 0; distId < numDistricts; distId++) {
     styleText += dsStyle(distId);
   }
-  styleText += `\n.${PARTY_NAMES[0]} { background-color: ${partyColors[PARTY_NAMES[0]]}; }`;
-  styleText += `\n.${PARTY_NAMES[1]} { background-color: ${partyColors[PARTY_NAMES[1]]}; }`;
+  styleText += `\n.party0 { background-color: ${partyColors[0]}; }`;
+  styleText += `\n.party1 { background-color: ${partyColors[1]}; }`;
   let styleEl = document.createElement('style');
   styleEl.innerHTML = styleText;
   $('script').parentNode.insertBefore(styleEl, $('script'));
