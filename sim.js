@@ -314,6 +314,21 @@ for (pickerInd in partyColorPickers) {
   partyColorPickers[pickerInd].onchange = updatePartyColors;
 }
 
+document.body.onchange = (e) => {
+  const sigDigs = 8;
+  const factor = 10**sigDigs;
+  if (e.target.id === 'percentParty0') {
+    $('#percentParty1').value = (
+      factor
+      - factor * Number($('#percentParty0').value)
+    ) / factor;
+  } else if (e.target.id === 'percentParty1') {
+    $('#percentParty0').value = (
+      factor
+      - factor * Number($('#percentParty1').value)
+    ) / factor;
+  }
+}
 // DYNAMIC STYLING
 
 const dsStyle = (districtId) => {
