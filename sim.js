@@ -46,6 +46,7 @@ const partyColors = {};
 partyColors[0] = $('#party0color').value;
 partyColors[1] = $('#party1color').value;
 let invalidHeadcountDistrictIds = [];
+let buttonHighlighted = false;
 
 voters.perVoter = (lambda) => {
   for (voterRow of voters) {
@@ -76,6 +77,7 @@ const generate = () => {
   generateVoters();
   applyDynamicStyles();
   render();
+  clearDistrictReport();
 };
 
 const generateVoters = () => {
@@ -84,10 +86,10 @@ const generateVoters = () => {
   let numParty1Voters = totalVoters - numParty0Voters;
   let voterAffiliations = [];
   for (let party0Ind = 0; party0Ind < numParty0Voters; party0Ind++) {
-    voterAffiliations.push(0);
+    voterAffiliations.push('party0');
   }
   for (let party1Ind = 0; party1Ind < numParty1Voters; party1Ind++) {
-    voterAffiliations.push(1);
+    voterAffiliations.push('party1');
   }
   voterAffiliations = shuffle(voterAffiliations);
 
@@ -141,6 +143,7 @@ const assignDistrictId = (x, y) => {
 const render = () => {
   $('#sim').innerHTML = '';
   $('#sim').appendChild(renderMap(voters));
+  updateHouseReport();
 };
 
 const renderMap = (voterData) => {
@@ -162,8 +165,8 @@ const districtCounts = (voters) => {
   const counts = {};
   for (let distId = 0; distId < numDistricts; distId++) {
     counts[distId] = {};
-    counts[distId][0] = 0;
-    counts[distId][1] = 0;
+    counts[distId].party0 = 0;
+    counts[distId].party1 = 0;
   }
   voters.perVoter((voter) => {
     counts[voter.districtId][voter.partyAffiliation] += 1;
@@ -172,30 +175,116 @@ const districtCounts = (voters) => {
   return counts;
 };
 
+const updateHouseReport = () => {
+  $('.houseReport').innerHTML = renderHouseReport();
+};
+
+const renderHouseReport = () => {
+  const distCounts = districtCounts(voters);
+  const results = overallCount(distCounts);
+  return `
+    <div class="houseTitle">HOUSE</div>
+    ${winnerDeclaration(results)}
+    <div class="partyControlReport">
+      <div class="partyDistrictCount party0">
+        ${results.party0}
+      </div>
+      districts
+    </div>
+    <div class="partyControlReport">
+      <div class="partyDistrictCount party1">
+        ${results.party1}
+        </div>
+        districts
+    </div>
+    <div class="tiedReport">
+      <div class="bigCount">
+        ${results.tied}
+      </div>
+      districts tied
+    </div>
+  `
+};
+
+const winnerDeclaration = (results) => {
+  if (results.party0 > results.party1) {
+    return `
+      <div class="winnerDeclaration winnerDeclarationLeft">
+        VICTOR
+      </div>
+    `;
+  } else if (results.party0 < results.party1) {
+    return `
+      <div class="winnerDeclaration winnerDeclarationRight">
+        VICTOR
+      </div>
+    `;
+  } else {
+    return `
+      <div class="winnerDeclaration winnerDeclarationTie">
+        tie!
+      </div>
+    `;
+  }
+};
+
+const overallCount = (distCounts) => {
+  const count = {
+    party0: 0,
+    party1: 0,
+    tied: 0
+  };
+
+  for (dCount of Object.values(distCounts)) {
+    if (dCount.party0 > dCount.party1) {
+      count.party0 ++;
+    } else if (dCount.party0 < dCount.party1) {
+      count.party1 ++;
+    } else { // tie
+      count.tied ++;
+    }
+  }
+
+  return count;
+};
+
 const renderVoter = (voterData) => {
   const voterDOM = document.createElement('div');
   voterDOM.classList.add('voter', `district-${voterData.districtId}`);
   voterDOM.setAttribute('data-voter-id', `${voterData.voterId[0]}-${voterData.voterId[1]}`);
   voterDOM.setAttribute('data-district-id', voterData.districtId);
   const voterAffilEl = document.createElement('div');
-  voterAffilEl.classList.add('voterAffiliation', `party${voterData.partyAffiliation}`);
+  voterAffilEl.classList.add('voterAffiliation', voterData.partyAffiliation);
   voterDOM.appendChild(voterAffilEl);
   return voterDOM;
 };
 
-const districtPopUp = (distId) => {
+const districtReport = (distId) => {
   const districtCount = districtCounts(voters)[distId];
-  const isTie = districtCount[0] === districtCount[1];
-  const party0Wins = districtCount[0] > districtCount[1];
-  const party1Wins = districtCount[0] < districtCount[1];
-  const distPopUpEl = document.createElement('div');
-  distPopUpEl.classList.add('districtPopUp');
-  distPopUpEl.innerHTML = `
-    <div class="districtTitle district-${distId}">district</div>
-    ${partyCount(0, districtCount[0], party0Wins, isTie)}
-    ${partyCount(1, districtCount[1], party1Wins, isTie)}
-  `;
-  return distPopUpEl;
+  // const isTie = districtCount[0] === districtCount[1];
+  // const party0Wins = districtCount[0] > districtCount[1];
+  // const party1Wins = districtCount[0] < districtCount[1];
+  return `
+    <div class="districtTitle district-${distId}">DISTRICT</div>
+    ${winnerDeclaration(districtCount)}
+    <div class="partyControlReport">
+      <div class="partyDistrictCount party0">
+        ${districtCount.party0}
+      </div>
+      voters
+    </div>
+    <div class="partyControlReport">
+      <div class="partyDistrictCount party1">
+        ${districtCount.party1}
+      </div>
+      voters
+    </div>
+    <div class="paintbrushHeadsUp">
+      Hold the Alt key and click to
+      </br>
+      select this district's color
+    </div>
+  `
 };
 
 const partyCount = (partyInd, count, win, tie) => {
@@ -203,7 +292,7 @@ const partyCount = (partyInd, count, win, tie) => {
   if (tie) {
     declaration = 'tie!';
   } else if (win) {
-    declaration = 'winner';
+    declaration = 'VICTOR';
   } else { // loses
     declaration = '';
   }
@@ -218,12 +307,6 @@ const partyCount = (partyInd, count, win, tie) => {
 };
 
 // USER ACTIONS
-
-$('#title').onchange = (e) => {
-  if (! /\S/.test($('#title').value)) {
-    $('#title').value = 'GERRYMANDERING';
-  }
-};
 
 document.addEventListener('keydown', (e) => {
   if (['AltLeft', 'AltRight'].includes(e.code)) {
@@ -240,31 +323,32 @@ document.addEventListener('keyup', (e) => {
 });
 
 document.body.onpointermove = (e) => {
-  if (targetHasClass(/voterAffiliation/, e)) {
+  if (targetHasClass('voterAffiliation', e)) {
     updateDistrictPopUp(e.target.parentNode);
-  } else if (targetHasClass(/voter\W/, e)) { // hovering a voter = hovering the district
+  } else if (targetHasClass('voter', e)) { // hovering a voter = hovering the district
     updateDistrictPopUp(e.target);
   } else {
-    if (hoveredDistrictId !== null) {
-      removeAllDistrictPopUps();
-    }
+    clearDistrictReport();
   }
 };
 
 const updateDistrictPopUp = (voter) => {
   const thisMoveHoveredDistrictId = Number(voter.className.match(/district\-(\d+)/)[1]);
   if (hoveredDistrictId !== thisMoveHoveredDistrictId) {
-    removeAllDistrictPopUps();
-    voter.appendChild(districtPopUp(thisMoveHoveredDistrictId));
+    $('.districtReport').innerHTML = districtReport(thisMoveHoveredDistrictId);
     hoveredDistrictId = thisMoveHoveredDistrictId;
   }
 };
 
-const removeAllDistrictPopUps = () => {
-  for (dpu of $$('.districtPopUp')) {
-    dpu.remove();
-  }
+const clearDistrictReport = () => {
   hoveredDistrictId = null;
+  $('.districtReport').innerHTML = `
+    <div class="hoverHeadsUp">
+      Hover over a district
+      <br />
+      to see its vote count
+    </div>
+  `;
 };
 
 document.body.onclick = (e) => {
@@ -272,6 +356,10 @@ document.body.onclick = (e) => {
     onVoterClick(e.target.parentElement);
   } else if (targetHasClass('voter', e)) {
     onVoterClick(e.target);
+  } else if (targetHasClass('regenerateButton', e)) {
+    selectedDistrictId = null;
+    setCursor(null);
+    unhighlightButton();
   } else {
     selectedDistrictId = null;
     setCursor(null);
@@ -283,7 +371,7 @@ document.body.onclick = (e) => {
 const targetHasClass = (className, evnt) => {
   return (
     evnt.target.className &&
-    evnt.target.className.match(className) !== null
+    evnt.target.className.split(' ').includes(className)
   )
 };
 
@@ -303,6 +391,7 @@ const onVoterClick = (voter) => {
 const assignVoterToDistrict = (voterId, districtId) => {
   voters[voterId[0]][voterId[1]].districtId = districtId;
   checkDistrictSizes();
+  render();
 };
 
 const checkDistrictSizes = () => {
@@ -310,7 +399,7 @@ const checkDistrictSizes = () => {
   const counts = districtCounts(voters);
   for (let distId = 0; distId < numDistricts; distId++) {
     const distCount = counts[distId];
-    const distTotal = distCount[0] + distCount[1];
+    const distTotal = distCount.party0 + distCount.party1;
     if (Math.abs(votersPerDistrict - distTotal) > 1) {
       invalidHeadcountDistrictIds.push(distId);
     }
@@ -324,26 +413,42 @@ const updatePartyColors = (e) => {
   applyDynamicStyles();
 };
 
-const partyColorPickers = $$('.partyColorPicker');
-for (pickerInd in partyColorPickers) {
-  partyColorPickers[pickerInd].onchange = updatePartyColors;
-}
-
 document.body.onchange = (e) => {
   const sigDigs = 8;
   const factor = 10**sigDigs;
-  if (e.target.id === 'percentParty0') {
+  if (e.target.id === 'title') {
+    if (! /\S/.test($('#title').value)) {
+      $('#title').value = 'GERRYMANDERING';
+    }
+  } else if (targetHasClass('partyColorPicker', e)) {
+    updatePartyColors();
+  } else if (e.target.id === 'percentParty0') {
+    highlightButton();
     $('#percentParty1').value = (
       factor
       - factor * Number($('#percentParty0').value)
     ) / factor;
   } else if (e.target.id === 'percentParty1') {
+    highlightButton();
     $('#percentParty0').value = (
       factor
       - factor * Number($('#percentParty1').value)
     ) / factor;
+  } else if (['numDist', 'votersPerDist'].includes(e.target.id)) {
+    highlightButton();
   }
 }
+
+const highlightButton = () => {
+  buttonHighlighted = true;
+  applyDynamicStyles();
+};
+
+const unhighlightButton = () => {
+  buttonHighlighted = false;
+  applyDynamicStyles();
+};
+
 // DYNAMIC STYLING
 
 const dsStyle = (districtId, invalidHeadcount) => {
@@ -380,6 +485,36 @@ const partySplitInputBackgroundStyles = () => {
     `;
 };
 
+const buttonStyle = (highlight) => {
+  if (highlight) {
+    return `
+      .regenerateButton {
+      	background-color: #f0c911;
+        border: 2px solid #e54;
+      	color: #b32;
+      }
+      .regenerateButton:hover {
+      	background-color: #f4d415;
+        border: 2px solid #e54;
+        color: #c43;
+      }
+    `;
+  } else {
+    return `
+      .regenerateButton {
+      	background-color: #ddd;
+      	border: 2px solid #555;
+      	color: #555;
+      }
+      .regenerateButton:hover {
+      	background-color: #eee;
+        border: 2px solid #666;
+        color: #666;
+      }
+    `;
+  }
+};
+
 const applyDynamicStyles = () => {
   const oldStyleEl = $('.dynamicStyleEl');
   let styleText = '';
@@ -389,6 +524,7 @@ const applyDynamicStyles = () => {
   styleText += `\n.party0 { background-color: ${partyColors[0]}; }`;
   styleText += `\n.party1 { background-color: ${partyColors[1]}; }`;
   styleText += partySplitInputBackgroundStyles();
+  styleText += buttonStyle(buttonHighlighted);
   let newStyleEl = document.createElement('style');
   newStyleEl.classList.add('dynamicStyleEl');
   newStyleEl.innerHTML = styleText;
@@ -399,7 +535,7 @@ const setCursor = (color) => {
   if (! color) {
     $('body').style.cursor = 'default';
   } else {
-    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='24'%20width='16'%3E%20%20%3Cpolygon%20points='2,2%2014,17%202,22'%20fill='%23${color}'%20stroke='black'%20stroke-width='1.5'/%3E%3C/svg%3E") 0 0, default`;
+    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='36'%20width='24'%3E%20%20%3Cpolygon%20points='3,3%2021,25%203,33'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
   }
 };
 

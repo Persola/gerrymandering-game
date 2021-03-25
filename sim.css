@@ -1,26 +1,28 @@
 :root {
   --bg-color: #444;
+  --panel-color: #333;
   --font-color: #fff;
+  --font-family: 'Trebuchet MS', sans-serif;
+  --panel-width: 284px;
+  --subtle-color: #999;
 }
 
 body {
   background-color: var(--bg-color);
   color: var(--font-color);
-  font-family: Tahoma, sans-serif;
+  font-family: var(--font-family);
   font-size: 18px;
 }
 
 #title {
   height: 30px;
+  margin: 8px 0 0 16px;
   width: 92%;
-  margin: 0 1%;
-  font-family: Trebuchet MS;
   font-size: 28px;
   font-weight: bold;
   color: #bbb;
   border: none;
-  /* background-color: #333; */
-  background-image: linear-gradient(to right, #333 0%, #333 60%, #444 80%);
+  background-color: var(--panel-color);
   padding: 10px 14px;
 }
 
@@ -29,7 +31,7 @@ body {
 }
 
 #controls {
-  margin: 10px 0 10px 20px;
+  margin: 10px 0 10px 16px;
   flex-grow: 0;
   flex-basis: 310px;
   min-width: 310px;
@@ -42,6 +44,75 @@ body {
 .button {
   height: 40px;
   width: 120px;
+}
+
+.houseReport {
+  width: var(--panel-width);
+  height: 245px;
+  padding: 8px 12px 12px 12px;
+  background-color: var(--panel-color);
+  text-align: center;
+}
+
+.houseTitle {
+  border-radius: 8px;
+  border: 3px solid #fff;
+  color: #fff;
+  margin: 8px auto;
+  padding: 4px;
+  text-align: center;
+  vertical-align: middle;
+  width: 60px;
+}
+
+.partyControlReport {
+  display: inline-block;
+  width: 135px;
+}
+
+.partyDistrictCount {
+  border-radius: 8px;
+  color: #fff;
+  margin: 0 auto 6px auto;
+  padding: 4px 0;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 30px;
+  width: 60px;
+}
+
+.bigCount {
+  font-size: 30px;
+  color: #ffc;
+}
+
+.tiedReport {
+  margin-top: 16px;
+}
+
+.winnerDeclaration {
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-style: italic;
+}
+
+.winnerDeclarationLeft {
+  text-align: left;
+  margin-left: 33px;
+  color: #ff0;
+  text-shadow: #f20 -1.6px -1.6px;
+}
+
+.winnerDeclarationRight {
+  text-align: right;
+  margin-right: 33px;
+  color: #ff0;
+  text-shadow: #f20 -1.6px -1.6px;
+}
+
+.winnerDeclarationTie {
+  text-align: center;
+  color: var(--subtle-color);
 }
 
 #sim {
@@ -70,38 +141,38 @@ body {
   background-color: #000;
 }
 
-#districtSelectorPanel {
-  color: white;
-  margin-left: 80px;
-  background-color: #222;
-}
-.districtSelector {
-  height: 30px;
+.districtReport {
+  width: var(--panel-width);
+  height: 220px;
+  margin: 14px 30px 8px 0;
+  padding: 12px;
+  background-color: var(--panel-color);
+  color: #fff;
   text-align: center;
-  background-color: #444;
-  text-shadow: 2px 2px 3px #000;
-  padding: 10px 10px 4px 10px;
-  display: inline-block;
 }
 
-.districtPopUp {
-  position: absolute;
-  z-index: 1;
-  left: 0px;
-  background-color: #ffd;
-  color: #000;
-  font-family: Tahoma, sans-serif;
-  min-width: 120px;
-  padding: 10px;
+.hoverHeadsUp {
+  background-color: #444;
+  padding: 95px 0 83px 0;
+  color: var(--subtle-color);
+  font-style: italic;
 }
 
 .districtTitle {
+  width: 85px;
+  height: 22px;
   border-radius: 10px;
   color: #fff;
-  margin: 0 0 10px 0;
-  padding: 4px 4px 6px 4px;
+  margin: 4px auto 10px auto;
+  padding: 6px 4px 4px 4px;
   text-align: center;
-  vertical-align: middle;
+}
+
+.paintbrushHeadsUp {
+  margin-top: 12px;
+  color: var(--subtle-color);
+  font-size: 16px;
+  font-style: italic;
 }
 
 .partyCount {
@@ -135,45 +206,52 @@ body {
   color: #888;
 }
 
+.spacer {
+  height: 1px;
+}
+
 .controlLine>input,select {  
   border: 1px solid #888;
+  margin-left: 6px;
   background-color: var(--bg-color);
   color: var(--font-color);
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
   text-align-last: center;
 }
 
-.controlLine>select {  
+.partyColorControlLine {
+  margin: 0 0 0 6px;
+}
+
+.regenerativeControls {
+  width: var(--panel-width);
+  margin: 12px 0;
+  padding: 8px 12px 12px 12px;
+  background-color: var(--panel-color);
+}
+
+select {  
   width: 60px;
 }
 
-.controlLine>input[type=color] {  
-  width: 50px;
-}
-
-#percentParty0,#percentParty1 {  
+input[type=color] {  
   width: 70px;
 }
 
+#percentParty0,#percentParty1 {  
+  width: 52px;
+}
+
 .regenerateButtonWrapper {
-  margin: 24px 0 48px 0;
+  margin: 18px 0 12px 0;
 }
 
 .regenerateButton {
-	background-color: #f0c911;
-	border: 2px solid #e65f44;
 	cursor: pointer;
-	color: #c92200;
-	font-family: Trebuchet MS;
 	font-size: 15px;
-	font-weight: bold;
-	padding: 9px 18px;
+	padding: 6px 12px;
 	text-decoration: none;
-}
-.regenerateButton:hover {
-	background-color: #f4d415;
-  border: 2px solid #ea5030;
 }
 .regenerateButton:active {
 	position: relative;

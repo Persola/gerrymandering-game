@@ -8,14 +8,14 @@
     <input type="text" id="title" name="title" maxlength="80" value="GERRYMANDERING">
     <div id="columnWrapper">
       <div id="controls">
-        <div class="controlLine">
+        <div class="controlLine partyColorControlLine">
           <datalist id="partyColorOptions">
             <option>#aaaa33</option>
             <option>#a866a8</option>
             <option>#dd8844</option>
             <option>#50a0bb</option>
           </datalist>
-          Party Colors:
+          Party Colors
           <input
             type="color"
             id="party0color"
@@ -33,52 +33,44 @@
             list="partyColorOptions"
           >
         </div>
-        <div class="controlLine">
-          <label>Voters' Party Split: </label>
-          <input type="text" id="percentParty0" name="percentParty0" class="party0" value="0.5" />
-          <input type="text" id="percentParty1" name="percentParty1" class="party1" value="0.5" />
+        <div class="regenerativeControls">
+          <div class="controlLine">
+            <label>Voters' Party Split </label>
+            <input type="text" id="percentParty0" name="percentParty0" class="party0" value="0.5" />
+            <input type="text" id="percentParty1" name="percentParty1" class="party1" value="0.5" />
+          </div>
+          <div class="controlLine">
+            <label for="numDist">Number of districts</label>
+            <select id="numDist" name="numDist">
+              <option value="1">1</option>
+              <option value="4">4</option>
+              <option value="9" selected="selected">9</option>
+              <option value="16">16</option>
+              <option value="25">25</option>
+            </select>
+          </div>
+          <div class="controlLine">
+            <label for="votersPerDist">Voters per district</label>
+            <select id="votersPerDist" name="votersPerDist">
+              <option value="1">1</option>
+              <option value="4">4</option>
+              <option value="9" selected="selected">9</option>
+              <option value="16">16</option>
+              <option value="25">25</option>
+              <option value="36">36</option>
+              <option value="49">49</option>
+              <option value="64">64</option>
+              <option value="81">81</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="regenerateButtonWrapper">
+            <a href="#" class="regenerateButton" onClick="generate()">REGENERATE</a>
+          </div>
         </div>
-        <div class="controlLine">
-          <label for="numDist">Number of districts</label>
-          <select id="numDist" name="numDist">
-            <option value="1">1</option>
-            <option value="4">4</option>
-            <option value="9" selected="selected">9</option>
-            <option value="16">16</option>
-            <option value="25">25</option>
-          </select>
-        </div>
-        <div class="controlLine">
-          <label for="votersPerDist">Number of voters per district</label>
-          <select id="votersPerDist" name="votersPerDist">
-            <option value="1">1</option>
-            <option value="4">4</option>
-            <option value="9" selected="selected">9</option>
-            <option value="16">16</option>
-            <option value="25">25</option>
-            <option value="36">36</option>
-            <option value="49">49</option>
-            <option value="64">64</option>
-            <option value="81">81</option>
-            <option value="100">100</option>
-          </select>
-        </div>
-        <div class="regenerateButtonWrapper">
-          <a href="#" class="regenerateButton" onClick="generate()">REGENERATE</a>
-        </div>
-        Results
-        <br />
-        [party] controls the house
-        <br />
-        [party] controls x seats
-        <br />
-        [party] controls x seats
-        <br />
-        District Panel
-        <br />
-        hover over a district to see a voter count
-        <br />
-        Press Alt (⎇) while clicking to select a district's color
+        <div class="houseReport"></div>
+        <div class="districtReport"></div>
+        <div class="spacer"></div>
       </div>
       <div id="sim"></div>
     </div>
