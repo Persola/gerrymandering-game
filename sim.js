@@ -41,7 +41,6 @@ const voters = [];
 const representatives = {};
 let selectedDistrictId = null;
 let hoveredDistrictId = null;
-let modifierKeyDown = false;
 const partyColors = {};
 partyColors[0] = $('#party0color').value;
 partyColors[1] = $('#party1color').value;
@@ -280,11 +279,6 @@ const districtReport = (distId) => {
       </div>
       voters
     </div>
-    <div class="paintbrushHeadsUp">
-      Hold the Alt key and click to
-      </br>
-      select this district's color
-    </div>
   `
 };
 
@@ -308,20 +302,6 @@ const partyCount = (partyInd, count, win, tie) => {
 };
 
 // USER ACTIONS
-
-document.addEventListener('keydown', (e) => {
-  if (['AltLeft', 'AltRight'].includes(e.code)) {
-    console.log('modifierKeyDown true');
-    modifierKeyDown = true;
-  }
-});
-
-document.addEventListener('keyup', (e) => {
-  if (['AltLeft', 'AltRight'].includes(e.code)) {
-    console.log('modifierKeyDown false');
-    modifierKeyDown = false;
-  }
-});
 
 document.body.onpointermove = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
@@ -354,9 +334,14 @@ const clearDistrictReport = () => {
 
 document.body.onclick = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
-    onVoterClick(e.target.parentElement);
+    const idMatch = e.target.parentElement.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
+    const voterId = [Number(idMatch[1]), Number(idMatch[2])]
+    if (typeof selectedDistrictId === 'number') {
+      assignVoterToDistrict(voterId, selectedDistrictId);      
+    }
   } else if (targetHasClass('voter', e)) {
-    onVoterClick(e.target);
+    selectedDistrictId = Number(e.target.getAttribute('data-district-id'))
+    setCursor(DIST_ID_TO_COLOR[selectedDistrictId]);
   } else if (targetHasClass('regenerateButton', e)) {
     selectedDistrictId = null;
     setCursor(null);
@@ -374,19 +359,6 @@ const targetHasClass = (className, evnt) => {
     evnt.target.className &&
     evnt.target.className.split(' ').includes(className)
   )
-};
-
-const onVoterClick = (voter) => {
-  if (modifierKeyDown) { // select paint color (district)
-    selectedDistrictId = Number(voter.getAttribute('data-district-id'))
-    setCursor(DIST_ID_TO_COLOR[selectedDistrictId]);
-  } else { // paint
-    const idMatch = voter.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
-    const voterId = [Number(idMatch[1]), Number(idMatch[2])]
-    if (typeof selectedDistrictId === 'number') {
-      assignVoterToDistrict(voterId, selectedDistrictId);      
-    }
-  }
 };
 
 const assignVoterToDistrict = (voterId, districtId) => {

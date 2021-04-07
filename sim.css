@@ -145,7 +145,7 @@ body {
 
 .districtReport {
   width: var(--panel-width);
-  height: 220px;
+  height: 165px;
   margin: 14px 30px 8px 0;
   padding: 12px;
   background-color: var(--panel-color);
@@ -155,7 +155,7 @@ body {
 
 .hoverHeadsUp {
   background-color: #444;
-  padding: 95px 0 83px 0;
+  padding: 62px 0 61px 0;
   color: var(--subtle-color);
   font-style: italic;
 }
@@ -168,13 +168,6 @@ body {
   margin: 4px auto 10px auto;
   padding: 6px 4px 4px 4px;
   text-align: center;
-}
-
-.paintbrushHeadsUp {
-  margin-top: 12px;
-  color: var(--subtle-color);
-  font-size: 16px;
-  font-style: italic;
 }
 
 .partyCount {
