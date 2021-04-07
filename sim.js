@@ -75,6 +75,7 @@ const generate = () => {
   }
   
   generateVoters();
+  checkDistrictSizes();
   applyDynamicStyles();
   render();
   clearDistrictReport();
