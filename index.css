@@ -120,6 +120,9 @@ body {
 #sim {
   flex-grow: 1;
   margin: 20px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
 #map {
