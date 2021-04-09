@@ -117,7 +117,7 @@ body {
   color: var(--subtle-color);
 }
 
-#sim {
+#mapWrapper {
   flex-grow: 1;
   margin: 20px;
   align-items: center;
