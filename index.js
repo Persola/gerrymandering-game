@@ -2,10 +2,10 @@ const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
   2: 'fa963d',
-  3: 'ffcc29',
-  4: '8040b0',
-  5: 'd860b0',
-  6: 'fa9bd0',
+  3: '8040b0',
+  4: 'd860b0',
+  5: 'e0b020',
+  6: '504090',
   7: '966060',
   8: '11698e',
   9: '608040',
@@ -38,11 +38,11 @@ const mapConfig = {
 };
 
 let appState = {
+  partyColors: [],
   selectedDistrictId: null,
   hoveredDistrictId: null,
   invalidHeadcountDistrictIds: [],
-  buttonHighlighted: false,
-  partyColors: []
+  buttonHighlighted: false
 };
 appState.partyColors[0] = $('#party0color').value;
 appState.partyColors[1] = $('#party1color').value;
@@ -273,11 +273,7 @@ document.body.onclick = (e) => {
 document.body.onchange = (e) => {
   const sigDigs = 8;
   const factor = 10**sigDigs;
-  if (e.target.id === 'title') {
-    if (! /\S/.test($('#title').value)) {
-      $('#title').value = 'GERRYMANDERING';
-    }
-  } else if (targetHasClass('partyColorPicker', e)) {
+  if (targetHasClass('partyColorPicker', e)) {
     updatePartyColors();
   } else if (e.target.id === 'percentParty0') {
     highlightButton();
@@ -337,7 +333,7 @@ const renderHouseReport = () => {
   const distCounts = districtCounts(voters);
   const results = overallCount(distCounts);
   return `
-    <div class="houseTitle">HOUSE</div>
+    <div class="houseTitle">STATE</div>
     ${winnerDeclaration(results)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">
@@ -430,8 +426,8 @@ const districtStyles = (districtId, invalidHeadcount) => {
         background-image: repeating-linear-gradient(
           -45deg,
           #${DIST_ID_TO_COLOR[districtId]},
-          #${DIST_ID_TO_COLOR[districtId]} 10.675px,
-          #f00 10.675px,
+          #${DIST_ID_TO_COLOR[districtId]} 18.675px,
+          #f00 18.675px,
           #f00 21.25px
         );
       }
@@ -474,14 +470,14 @@ const buttonStyle = (highlight) => {
   } else {
     return `
       .regenerateButton {
-      	background-color: #ddd;
-      	border: 2px solid #555;
-      	color: #555;
+      	background-color: #ee8;
+      	border: 2px solid #995;
+      	color: #b32;
       }
       .regenerateButton:hover {
-      	background-color: #eee;
-        border: 2px solid #666;
-        color: #666;
+      	background-color: #ff9;
+        border: 2px solid #aa6;
+        color: #c43;
       }
     `;
   }
