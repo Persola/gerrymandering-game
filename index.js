@@ -47,6 +47,7 @@ let appState = {
 appState.partyColors[0] = $('#party0color').value;
 appState.partyColors[1] = $('#party1color').value;
 
+// Double nested array of voter data. See generateVoters
 const voters = [];
 
 // PURE FUNCTIONS OF STATE
@@ -253,10 +254,11 @@ document.body.onpointermove = (e) => {
 
 document.body.onclick = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
-    const idMatch = e.target.parentElement.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
-    const voterId = [Number(idMatch[1]), Number(idMatch[2])]
-    if (typeof appState.selectedDistrictId === 'number') {
-      assignVoterToDistrict(voterId, appState.selectedDistrictId);      
+    const voterIdMatch = e.target.parentElement.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
+    const clickedVoterId = [Number(voterIdMatch[1]), Number(voterIdMatch[2])]
+    const replacedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'));
+    if (shouldAssignVoter(clickedVoterId, appState.selectedDistrictId, replacedDistrictId)) {
+      assignVoterToDistrict(clickedVoterId, appState.selectedDistrictId);
     }
   } else if (targetHasClass('voter', e)) {
     selectDistrict(Number(e.target.getAttribute('data-district-id')));
@@ -269,6 +271,116 @@ document.body.onclick = (e) => {
 
   render();
 }
+
+const shouldAssignVoter = (clickedVoterId, selectedDistrictId, replacedDistrictId) => {
+  return (
+    typeof selectedDistrictId === 'number' // a district is selected
+    && selectedDistrictWouldBeLocallyConnected(clickedVoterId, selectedDistrictId)
+    && replacedDistrictWouldBeLocallyConnected(clickedVoterId, replacedDistrictId)
+  )
+};
+
+const selectedDistrictWouldBeLocallyConnected = (clickedVoterId, selectedDistrictId) => {
+  /*
+    Allow or disallow assignment of individual voters to districts such that
+    across many assignments (1) districts never contain holes (voters of other
+    districts inside them) and (2) districts are never broken into unconnected
+    pieces.
+  */
+  const selectedDistrictNeighbors = detectNeighborsOfDistrict(clickedVoterId, selectedDistrictId);
+
+  if ([
+    selectedDistrictNeighbors.down,
+    selectedDistrictNeighbors.right,
+    selectedDistrictNeighbors.up,
+    selectedDistrictNeighbors.left
+  ].filter(Boolean).length === 0) {
+    /*
+      Clicked voter has no directly adjacent neighbors belonging to the selected
+      district, so it would be isolated
+    */
+    return false;
+  }
+
+  const gaps = countGaps(selectedDistrictNeighbors);
+  return gaps < 2; // multiple gaps creates a hole
+};
+
+const replacedDistrictWouldBeLocallyConnected = (clickedVoterId, replacedDistrictId) => {
+  /*
+    Allow or disallow removal of voters from districts such that across many
+    removals the replaced district will never be broken into separate pieces.
+  */
+  const replacedDistrictNeighbors = detectNeighborsOfDistrict(clickedVoterId, replacedDistrictId);
+  const gaps = countGaps(replacedDistrictNeighbors);
+  return gaps < 2; // multiple gaps severs a district
+};
+
+const detectNeighborsOfDistrict = (centerVoterCoords, districtId) => {
+  return {
+    down:      coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1]    ], districtId),
+    downRight: coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] + 1], districtId),
+    right:     coordsWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] + 1], districtId),
+    upRight:   coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] + 1], districtId),
+    up:        coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1]    ], districtId),
+    upLeft:    coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] - 1], districtId),
+    left:      coordsWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] - 1], districtId),
+    downLeft:  coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] - 1], districtId)
+  };
+};
+
+const coordsWithinDistrict = (coords, districtId) => {
+  if (
+    coords[0] < 0 ||
+    coords[1] < 0 ||
+    coords[0] >= (rootTotalVoters()) ||
+    coords[1] >= (rootTotalVoters())
+  ) {
+    return false; // out of bounds, not a voter
+  }
+
+  return voters[coords[0]][coords[1]].districtId === districtId;
+};
+
+const countGaps = (neighborsOfDistrict) => {
+  /*
+    Only cells in the four basic directions count as adjacent. Diagonals are
+    only referenced in order to do this.
+  */
+  const directions = [
+    'downRight',
+    'right',
+    'upRight',
+    'up',
+    'upLeft',
+    'left',
+    'downLeft',
+    'down',
+  ];
+
+  let inSelectedDistrict = neighborsOfDistrict.down;
+  let gaps = 0;
+
+  for (directionInd in directions) {
+    const direction = directions[directionInd];
+
+    if (inSelectedDistrict) {
+      if (!neighborsOfDistrict[direction]) {
+        inSelectedDistrict = false;
+        gaps ++;
+      }
+    } else {
+      if (
+        neighborsOfDistrict[direction] &&
+        ['down', 'right', 'up', 'left'].includes(direction)
+      ) {
+        inSelectedDistrict = true;
+      }
+    }
+  }
+
+  return gaps;
+};
 
 document.body.onchange = (e) => {
   const sigDigs = 8;
