@@ -428,7 +428,13 @@ const renderMap = (voterData) => {
 
 const renderVoter = (voterData) => {
   const voterDOM = document.createElement('div');
-  voterDOM.classList.add('voter', `district-${voterData.districtId}`);
+  const classList = ['voter', `district-${voterData.districtId}`];
+  const sameDistrictNeighbors = detectNeighborsOfDistrict(voterData.voterId, voterData.districtId);
+  if (!sameDistrictNeighbors.down) { classList.push('district-border-bottom') }
+  if (!sameDistrictNeighbors.right) { classList.push('district-border-right') }
+  if (!sameDistrictNeighbors.up) { classList.push('district-border-top') }
+  if (!sameDistrictNeighbors.left) { classList.push('district-border-left') }
+  voterDOM.classList.add(...classList);
   voterDOM.setAttribute('data-voter-id', `${voterData.voterId[0]}-${voterData.voterId[1]}`);
   voterDOM.setAttribute('data-district-id', voterData.districtId);
   const voterAffilEl = document.createElement('div');

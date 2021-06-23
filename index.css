@@ -5,6 +5,7 @@
   --font-family: 'Trebuchet MS', sans-serif;
   --panel-width: 320px;
   --subtle-color: #999;
+  --district-border-width: 5px;
 }
 
 body {
@@ -120,6 +121,23 @@ body {
 .voter {
   position: relative; /* for pop up absolute positioning */
   background-color: #f00; /* to be overwritten by per-district styles */
+  border: var(--district-border-width) solid transparent;
+}
+
+.voter.district-border-bottom {
+  border-bottom: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voter.district-border-right {
+  border-right: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voter.district-border-top {
+  border-top: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voter.district-border-left {
+  border-left: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
 }
 
 .voterAffiliation {
@@ -130,13 +148,13 @@ body {
   width: 36px;  /* circular and square affiliation match in area */
   height: 36px;
   border-radius: 20px;
-  margin: 10px auto;
+  margin: calc(10px - var(--district-border-width))  auto;
 }
 
 .voterAffiliation.party1 {
   width: 31.45px; /* circular and square affiliation match in area */
   height: 31.45px;
-  margin: 12.275px auto;
+  margin: calc(12.275px - var(--district-border-width)) auto;
 }
 
 .none {
