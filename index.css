@@ -101,14 +101,14 @@ body {
 
 .winnerDeclarationLeft {
   text-align: left;
-  margin-left: 52px;
+  margin-left: 37px;
   color: #ff0;
   text-shadow: #f20 -1.6px -1.6px;
 }
 
 .winnerDeclarationRight {
   text-align: right;
-  margin-right: 48px;
+  margin-right: 33px;
   color: #ff0;
   text-shadow: #f20 -1.6px -1.6px;
 }

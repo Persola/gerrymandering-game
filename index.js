@@ -500,13 +500,13 @@ const winnerDeclaration = (results) => {
   if (results.party0 > results.party1) {
     return `
       <div class="winnerDeclaration winnerDeclarationLeft">
-        VICTOR
+        MAJORITY
       </div>
     `;
   } else if (results.party0 < results.party1) {
     return `
       <div class="winnerDeclaration winnerDeclarationRight">
-        VICTOR
+        MAJORITY
       </div>
     `;
   } else {
