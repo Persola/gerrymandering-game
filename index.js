@@ -49,6 +49,7 @@ appState.partyColors[1] = $('#party1color').value;
 
 // Double nested array of voter data. See generateVoters
 const voters = [];
+const origVoters = [];
 
 // PURE FUNCTIONS OF STATE
 
@@ -168,6 +169,8 @@ const generate = () => {
   }
 
   generateVoters();
+  setOrigVoters();
+  updateOrigHouseReport();
   checkDistrictSizes();
   applyDynamicStyles();
   render();
@@ -199,6 +202,20 @@ const generateVoters = () => {
       };
     }
   }
+};
+
+const setOrigVoters = () => {
+  origVoters.length = 0;
+
+  voters.forEach(voterCol => {
+    const col = [];
+
+    voterCol.forEach(voter => {
+      col.push(Object.assign({}, voter));
+    });
+
+    origVoters.push(col);
+  });
 };
 
 // from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -408,7 +425,7 @@ document.body.onchange = (e) => {
 
 const render = () => {
   $('#mapWrapper').replaceChild(renderMap(voters), $('#map'));
-  updateHouseReport();
+  updateCurrentHouseReport();
 };
 
 const renderMap = (voterData) => {
@@ -443,15 +460,20 @@ const renderVoter = (voterData) => {
   return voterDOM;
 };
 
-const updateHouseReport = () => {
-  $('.houseReport').innerHTML = renderHouseReport();
+const updateCurrentHouseReport = () => {
+  $('.currentHouseReport').innerHTML = renderHouseReport(voters, 'Your Gerrymandered Split');
 };
 
-const renderHouseReport = () => {
-  const distCounts = districtCounts(voters);
+const updateOrigHouseReport = () => {
+  $('.origHouseReport').innerHTML = renderHouseReport(origVoters, 'Original Split');
+};
+
+const renderHouseReport = (votersForReport, subtitle) => {
+  const distCounts = districtCounts(votersForReport);
   const results = overallCount(distCounts);
   return `
     <div class="houseTitle">STATE</div>
+    <div class="houseSubtitle">${subtitle}</div>
     ${winnerDeclaration(results)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="index.css">
     <style class="dynamicStyleEl"> </style>
   </head>
@@ -67,8 +68,9 @@
             <a href="#" class="regenerateButton" onClick="generate()">Change Voter Distribution</a>
           </div>
         </div>
-        <div class="houseReport"></div>
-        <div class="districtReport"></div>
+        <div class="report houseReport origHouseReport"></div>
+        <div class="report houseReport currentHouseReport"></div>
+        <div class="report districtReport"></div>
         <div class="spacer"></div>
       </div>
       <div id="mapWrapper">

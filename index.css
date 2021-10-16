@@ -36,9 +36,13 @@ body {
   width: 120px;
 }
 
+.report {
+  margin: 12px 0 0 0;
+}
+
 .houseReport {
   width: var(--panel-width);
-  height: 245px;
+  height: 260px;
   padding: 8px 12px 12px 12px;
   background-color: var(--panel-color);
   text-align: center;
@@ -54,6 +58,14 @@ body {
   text-align: center;
   vertical-align: middle;
   width: 66px;
+}
+
+.houseSubtitle {
+  color: #fff;
+  font-weight: 400;
+  margin: 8px auto;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .partyControlReport {
@@ -164,7 +176,6 @@ body {
 .districtReport {
   width: var(--panel-width);
   height: 165px;
-  margin: 14px 30px 8px 0;
   padding: 12px;
   background-color: var(--panel-color);
   color: #fff;
@@ -239,7 +250,7 @@ body {
 
 .regenerativeControls {
   width: var(--panel-width);
-  margin: 12px 0;
+  margin: 12px 0 0 0;
   padding: 8px 12px 12px 12px;
   background-color: var(--panel-color);
 }
