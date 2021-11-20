@@ -482,16 +482,16 @@ const renderHouseReport = (votersForReport, subtitle) => {
       districts
     </div>
     <div class="partyControlReport">
+      <div class="partyDistrictCount">
+        ${results.tied}
+      </div>
+      tied
+    </div>
+    <div class="partyControlReport">
       <div class="partyDistrictCount party1">
         ${results.party1}
         </div>
         districts
-    </div>
-    <div class="tiedReport">
-      <div class="bigCount">
-        ${results.tied}
-      </div>
-      districts tied
     </div>
   `
 };
@@ -528,6 +528,12 @@ const districtReport = (distId) => {
         ${districtCount.party0}
       </div>
       voters
+    </div>
+    <div class="partyControlReport">
+      <div class="partyDistrictCount">
+        ${districtCount.party0 + districtCount.party1}
+      </div>
+      total
     </div>
     <div class="partyControlReport">
       <div class="partyDistrictCount party1">

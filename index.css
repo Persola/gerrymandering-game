@@ -42,7 +42,7 @@ body {
 
 .houseReport {
   width: var(--panel-width);
-  height: 260px;
+  height: 204px;
   padding: 8px 12px 12px 12px;
   background-color: var(--panel-color);
   text-align: center;
@@ -70,7 +70,7 @@ body {
 
 .partyControlReport {
   display: inline-block;
-  width: 135px;
+  width: 90px;
 }
 
 .partyDistrictCount {
@@ -84,31 +84,22 @@ body {
   width: 60px;
 }
 
-.bigCount {
-  font-size: 30px;
-  color: #ffc;
-}
-
-.tiedReport {
-  margin-top: 16px;
-}
-
 .winnerDeclaration {
-  margin-bottom: 8px;
+  margin: 20px 0 8px 0;
   font-size: 24px;
   font-style: italic;
 }
 
 .winnerDeclarationLeft {
   text-align: left;
-  margin-left: 37px;
+  margin-left: 12px;
   color: #ff0;
   text-shadow: #f20 -1.6px -1.6px;
 }
 
 .winnerDeclarationRight {
   text-align: right;
-  margin-right: 33px;
+  margin-right: 8px;
   color: #ff0;
   text-shadow: #f20 -1.6px -1.6px;
 }
