@@ -647,7 +647,7 @@ const setCursor = (color) => {
   if (! color) {
     $('body').style.cursor = 'default';
   } else {
-    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='36'%20width='24'%3E%20%20%3Cpolygon%20points='3,3%2021,25%203,33'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
+    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='54'%20width='36'%3E%20%20%3Cpolygon%20points='5,5%2030,37%205,49'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
   }
 };
 
