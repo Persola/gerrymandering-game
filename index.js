@@ -29,6 +29,8 @@ const DIST_ID_TO_COLOR = {
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const assignVoterIndicatorClass = 'assignVoterIndicator';
+
 // INITIALIZE STATE
 
 const mapConfig = {
@@ -41,6 +43,7 @@ let appState = {
   partyColors: [],
   selectedDistrictId: null,
   hoveredDistrictId: null,
+  hoveringOnSlot: false,
   invalidHeadcountDistrictIds: [],
   buttonHighlighted: false
 };
@@ -123,12 +126,12 @@ const assignVoterToDistrict = (voterId, districtId) => {
 
 const selectDistrict = (districtId) => {
   appState.selectedDistrictId = districtId;
-  setCursor(DIST_ID_TO_COLOR[districtId]);
+  setCursor();
 };
 
 const deselectDistrict = () => {
   appState.selectedDistrictId = null;
-  setCursor(null);
+  setCursor();
 };
 
 const checkDistrictSizes = () => {
@@ -262,19 +265,52 @@ const targetHasClass = (className, evnt) => {
 document.body.onpointermove = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
     updateDistrictReport(e.target.parentNode);
-  } else if (targetHasClass('voterSlot', e)) { // hovering a voter slot = hovering the district
+    updateAssignVoterIndicator(
+      voterIsAssignable(
+        extractVoterId(e.target.parentElement.getAttribute('data-voter-id')),
+        appState.selectedDistrictId,
+        Number(e.target.parentElement.getAttribute('data-district-id'))
+      )
+      ? e.target.parentNode
+      : null
+    );
+    appState.hoveringOnSlot = false;
+  } else if (targetHasClass('voterSlot', e)) {
     updateDistrictReport(e.target);
+    updateAssignVoterIndicator(null);
+    appState.hoveringOnSlot = true;
   } else {
     clearDistrictReport();
+    updateAssignVoterIndicator(null);
+    appState.hoveringOnSlot = false;
   }
+
+  setCursor();
+};
+
+const updateAssignVoterIndicator = (hoveredSlot) => {
+  const indicatedSlot = $(`.${assignVoterIndicatorClass}`);
+
+  if (indicatedSlot === hoveredSlot) {
+    return;
+  }
+
+  if (indicatedSlot !== null) {
+    indicatedSlot.classList.remove(assignVoterIndicatorClass);
+  }
+
+  if (hoveredSlot !== null) {
+    hoveredSlot.classList.add(assignVoterIndicatorClass);
+  }
+
+  applyDynamicStyles();
 };
 
 document.body.onclick = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
-    const voterIdMatch = e.target.parentElement.getAttribute('data-voter-id').match(/(\d+)\-(\d+)/);
-    const clickedVoterId = [Number(voterIdMatch[1]), Number(voterIdMatch[2])]
+    const clickedVoterId = extractVoterId(e.target.parentElement.getAttribute('data-voter-id'));
     const replacedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'));
-    if (shouldAssignVoter(clickedVoterId, appState.selectedDistrictId, replacedDistrictId)) {
+    if (voterIsAssignable(clickedVoterId, appState.selectedDistrictId, replacedDistrictId)) {
       assignVoterToDistrict(clickedVoterId, appState.selectedDistrictId);
     }
   } else if (targetHasClass('voterSlot', e)) {
@@ -289,11 +325,16 @@ document.body.onclick = (e) => {
   render();
 }
 
-const shouldAssignVoter = (clickedVoterId, selectedDistrictId, replacedDistrictId) => {
+const extractVoterId = idString => {
+  const match = idString.match(/(\d+)\-(\d+)/);
+  return [Number(match[1]), Number(match[2])]
+};
+
+const voterIsAssignable = (voterId, selectedDistrictId, voterOldDistrictId) => {
   return (
     typeof selectedDistrictId === 'number' // a district is selected
-    && selectedDistrictWouldBeLocallyConnected(clickedVoterId, selectedDistrictId)
-    && replacedDistrictWouldBeLocallyConnected(clickedVoterId, replacedDistrictId)
+    && selectedDistrictWouldBeLocallyConnected(voterId, selectedDistrictId)
+    && replacedDistrictWouldBeLocallyConnected(voterId, voterOldDistrictId)
   )
 };
 
@@ -641,6 +682,11 @@ const applyDynamicStyles = () => {
   styleText += `\n.party1 { background-color: ${appState.partyColors[1]}; }`;
   styleText += partySplitInputBackgroundStyles();
   styleText += buttonStyle(appState.buttonHighlighted);
+  styleText += `
+    .${assignVoterIndicatorClass} {
+      background-color: #${DIST_ID_TO_COLOR[appState.selectedDistrictId]};
+    }
+  `;
 
   const oldStyleEl = $('.dynamicStyleEl');
   let newStyleEl = document.createElement('style');
@@ -649,12 +695,54 @@ const applyDynamicStyles = () => {
   oldStyleEl.parentElement.replaceChild(newStyleEl, oldStyleEl);
 };
 
-const setCursor = (color) => {
-  if (! color) {
-    color = 'ffffff';
-  }
+const setCursor = () => {
+  const emptyColor = 'ffffff';
+  const mainColor = (
+    appState.selectedDistrictId === null
+    ? emptyColor
+    : DIST_ID_TO_COLOR[appState.selectedDistrictId]
+  );
+  const secondColor = (
+    appState.hoveringOnSlot && (appState.selectedDistrictId !== appState.hoveredDistrictId)
+    ? DIST_ID_TO_COLOR[appState.hoveredDistrictId]
+    : null
+  );
 
-  $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='54'%20width='36'%3E%20%20%3Cpolygon%20points='5,5%2030,37%205,49'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
+  $('body').style.cursor = cursorStyle(mainColor, secondColor);
+};
+
+const cursorStyle = (color, innerColor) => {
+  const first = (
+    `url(`
+      + `"data:image/svg+xml,%3C`
+        + `svg%20xmlns='http://www.w3.org/2000/svg'%20`
+        + `height='54'%20`
+        + `width='36'`
+      + `%3E`
+      + `%3C`
+        + `polygon%20`
+        + `points='1,0%2026,32%201,44'%20`
+        + `fill='%23${color}'%20`
+        + `stroke='black'%20`
+        + `stroke-width='2'/`
+      + `%3E`
+  )
+  const optional = (
+      `%3C`
+        + `polygon%20`
+        + `points='1,30%2018,22%2026,32%201,44'%20`
+        + `fill='%23${innerColor}'%20`
+        + `stroke='black'%20`
+        + `stroke-width='2'/`
+      + `%3E`
+  )
+  const last = `%3C/svg%3E") 0 0, default`;
+
+  if (innerColor !== null) {
+    return first + optional + last;
+  } else {
+    return first + last;
+  }
 };
 
 // INITIALIZATION
