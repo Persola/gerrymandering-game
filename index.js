@@ -262,7 +262,7 @@ const targetHasClass = (className, evnt) => {
 document.body.onpointermove = (e) => {
   if (targetHasClass('voterAffiliation', e)) {
     updateDistrictReport(e.target.parentNode);
-  } else if (targetHasClass('voter', e)) { // hovering a voter = hovering the district
+  } else if (targetHasClass('voterSlot', e)) { // hovering a voter slot = hovering the district
     updateDistrictReport(e.target);
   } else {
     clearDistrictReport();
@@ -277,7 +277,7 @@ document.body.onclick = (e) => {
     if (shouldAssignVoter(clickedVoterId, appState.selectedDistrictId, replacedDistrictId)) {
       assignVoterToDistrict(clickedVoterId, appState.selectedDistrictId);
     }
-  } else if (targetHasClass('voter', e)) {
+  } else if (targetHasClass('voterSlot', e)) {
     selectDistrict(Number(e.target.getAttribute('data-district-id')));
   } else if (targetHasClass('regenerateButton', e)) {
     deselectDistrict();
@@ -445,7 +445,7 @@ const renderMap = (voterData) => {
 
 const renderVoter = (voterData) => {
   const voterDOM = document.createElement('div');
-  const classList = ['voter', `district-${voterData.districtId}`];
+  const classList = ['voterSlot', `district-${voterData.districtId}`];
   const sameDistrictNeighbors = detectNeighborsOfDistrict(voterData.voterId, voterData.districtId);
   if (!sameDistrictNeighbors.down) { classList.push('district-border-bottom') }
   if (!sameDistrictNeighbors.right) { classList.push('district-border-right') }
@@ -651,14 +651,15 @@ const applyDynamicStyles = () => {
 
 const setCursor = (color) => {
   if (! color) {
-    $('body').style.cursor = 'default';
-  } else {
-    $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='54'%20width='36'%3E%20%20%3Cpolygon%20points='5,5%2030,37%205,49'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
+    color = 'ffffff';
   }
+
+  $('body').style.cursor = `url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20height='54'%20width='36'%3E%20%20%3Cpolygon%20points='5,5%2030,37%205,49'%20fill='%23${color}'%20stroke='black'%20stroke-width='2'/%3E%3C/svg%3E") 0 0, default`;
 };
 
 // INITIALIZATION
 
 window.onload = (e) => {
   generate();
+  setCursor(null);
 };
