@@ -331,6 +331,10 @@ const extractVoterId = idString => {
 };
 
 const voterIsAssignable = (voterId, selectedDistrictId, voterOldDistrictId) => {
+  if (voterOldDistrictId === selectedDistrictId) {
+    return false;
+  }
+
   return (
     typeof selectedDistrictId === 'number' // a district is selected
     && selectedDistrictWouldBeLocallyConnected(voterId, selectedDistrictId)
@@ -684,6 +688,7 @@ const applyDynamicStyles = () => {
   styleText += buttonStyle(appState.buttonHighlighted);
   styleText += `
     .${assignVoterIndicatorClass} {
+      background-image: none;
       background-color: #${DIST_ID_TO_COLOR[appState.selectedDistrictId]};
     }
   `;
