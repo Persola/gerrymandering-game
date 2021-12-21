@@ -60,6 +60,10 @@ let rootNumDistricts = () => { return mapConfig.numDistricts**(1/2) };
 let rootNumVotersPerDistrict = () => { return mapConfig.votersPerDistrict**(1/2) };
 let rootTotalVoters = () => { return rootNumDistricts() * rootNumVotersPerDistrict() };
 
+// LOAD SOUND
+
+const clickFoley = new Audio('./click.mp3');
+
 // 
 
 const districtCounts = (voters) => {
@@ -119,6 +123,7 @@ const updateMapConfigFromInputs = () => {
 };
 
 const assignVoterToDistrict = (voterId, districtId) => {
+  clickFoley.play();
   voters[voterId[0]][voterId[1]].districtId = districtId;
   checkDistrictSizes();
   render();
