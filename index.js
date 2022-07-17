@@ -64,8 +64,6 @@ let rootTotalVoters = () => { return rootNumDistricts() * rootNumVotersPerDistri
 
 const clickFoley = new Audio('./click.mp3');
 
-// 
-
 const districtCounts = (voters) => {
   const counts = {};
   for (let distId = 0; distId < mapConfig.numDistricts; distId++) {
@@ -511,19 +509,18 @@ const renderVoter = (voterData) => {
 };
 
 const updateCurrentHouseReport = () => {
-  $('.currentHouseReport').innerHTML = renderHouseReport(voters, 'Your Gerrymandered Split');
+  $('.currentHouseReport').innerHTML = renderHouseReport(voters, 'Gerrymandered Districts');
 };
 
 const updateOrigHouseReport = () => {
-  $('.origHouseReport').innerHTML = renderHouseReport(origVoters, 'Original Split');
+  $('.origHouseReport').innerHTML = renderHouseReport(origVoters, 'State - Original Districts');
 };
 
-const renderHouseReport = (votersForReport, subtitle) => {
+const renderHouseReport = (votersForReport, title) => {
   const distCounts = districtCounts(votersForReport);
   const results = overallCount(distCounts);
   return `
-    <div class="houseTitle">STATE</div>
-    <div class="houseSubtitle">${subtitle}</div>
+    <div class="houseTitle">${title}</div>
     ${winnerDeclaration(results)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">
