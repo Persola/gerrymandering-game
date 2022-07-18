@@ -236,6 +236,10 @@ body {
   text-align-last: center;
 }
 
+#timer {
+  margin-left: 25px;
+}
+
 .partyColorControlLine {
   margin: 0 0 0 6px;
 }
@@ -253,7 +257,7 @@ select {
 }
 
 input[type=color] {  
-  width: 70px;
+  width: 50px;
 }
 
 #percentParty0,#percentParty1 {  

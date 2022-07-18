@@ -50,6 +50,9 @@ let appState = {
 appState.partyColors[0] = $('#party0color').value;
 appState.partyColors[1] = $('#party1color').value;
 
+// dummy interval to start
+let timerInterval = setInterval(() => null, 100);
+
 // Double nested array of voter data. See generateVoters
 const voters = [];
 const origVoters = [];
@@ -109,6 +112,23 @@ const perVoter = (voters, lambda) => {
 };
 
 // STATE MANAGEMENT
+
+const restartTimer = () => {
+  const startTime = Date.now();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    updateTimer(startTime);
+  }, 1)
+};
+
+const updateTimer = (startTime) => {
+  const totalMilliseconds = Date.now() - startTime;
+  const seconds = Math.floor(totalMilliseconds/1000) % 60;
+  const minutes = Math.floor(totalMilliseconds/(1000 * 60));
+  const secondsString = String(seconds).padStart(2, 0);
+  const minutesString = String(minutes).padStart(2, 0);
+  $('#timer').innerText = `${minutesString}:${secondsString}`;
+};
 
 const updateMapConfigFromInputs = () => {
   if (mapConfig.percentParty0 === undefined) {
@@ -181,6 +201,7 @@ const generate = () => {
   applyDynamicStyles();
   render();
   clearDistrictReport();
+  restartTimer();
 };
 
 const generateVoters = () => {
@@ -757,4 +778,5 @@ const cursorStyle = (color, innerColor) => {
 window.onload = (e) => {
   generate();
   setCursor(null);
+  restartTimer();
 };
