@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="index.css">
+    <style class="dynamicStyleEl"> </style>
+  </head>
+  <body>
+    <div id="columnWrapper">
+      <div id="controls">
+        <div class="controlLine partyColorControlLine">
+          <datalist id="partyColorOptions">
+            <option>#aaaa33</option>
+            <option>#a866a8</option>
+            <option>#dd8844</option>
+            <option>#50a0bb</option>
+          </datalist>
+          Party Colors
+          <input
+            type="color"
+            id="party0color"
+            name="party0color"
+            value="#e48003"
+            class="partyColorPicker"
+            list="partyColorOptions"
+          >
+          <input
+            type="color"
+            id="party1color"
+            name="party1color"
+            value="#a866a8"
+            class="partyColorPicker"
+            list="partyColorOptions"
+          >
+          <span id="timer" class="controlLine">
+            [timer]
+          </span>
+        </div>
+        <div class="regenerativeControls">
+          <div class="controlLine">
+            <label>Voters' Party Split </label>
+            <input type="text" id="percentParty0" name="percentParty0" class="party0" value="0.5" />
+            <input type="text" id="percentParty1" name="percentParty1" class="party1" value="0.5" />
+          </div>
+          <div class="controlLine">
+            <label for="numDist">Number of districts</label>
+            <select id="numDist" name="numDist">
+              <option value="1">1</option>
+              <option value="4">4</option>
+              <option value="9" selected="selected">9</option>
+              <option value="16">16</option>
+              <option value="25">25</option>
+            </select>
+          </div>
+          <div class="controlLine">
+            <label for="votersPerDist">Voters per district</label>
+            <select id="votersPerDist" name="votersPerDist">
+              <option value="1">1</option>
+              <option value="4">4</option>
+              <option value="9">9</option>
+              <option value="16">16</option>
+              <option value="25" selected="selected">25</option>
+              <option value="36">36</option>
+              <option value="49">49</option>
+              <option value="64">64</option>
+              <option value="81">81</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="regenerateButtonWrapper">
+            <a href="#" class="regenerateButton">Change Voter Distribution</a>
+          </div>
+        </div>
+        <div class="report houseReport origHouseReport"></div>
+        <div class="report houseReport currentHouseReport"></div>
+        <div class="report districtReport"></div>
+        <div class="spacer"></div>
+      </div>
+      <div id="mapWrapper">
+        <div id="map" />
+      </div>
+    </div>
+  </body>
+  <script src="./index.js">
+  </script>
+</html>

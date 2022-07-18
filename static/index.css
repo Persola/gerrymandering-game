@@ -1,0 +1,283 @@
+:root {
+  --bg-color: #fff;
+  --panel-color: #fff;
+  --font-color: #000;
+  --font-family: 'Trebuchet MS', sans-serif;
+  --panel-width: 320px;
+  --subtle-color: #999;
+  --district-border-width: 5px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  font-family: var(--font-family);
+  font-size: 20px;
+}
+
+#columnWrapper {
+  display: flex;
+}
+
+#controls {
+  margin: 10px 0 10px 16px;
+  flex-grow: 0;
+  flex-basis: 310px;
+  min-width: 344px;
+}
+
+.controlLine {
+  margin: 6px 0;
+  font-size: 22px;
+}
+
+.button {
+  height: 40px;
+  width: 120px;
+}
+
+.report {
+  margin: 12px 0 0 0;
+}
+
+.houseReport {
+  width: var(--panel-width);
+  height: 204px;
+  padding: 8px 12px 12px 12px;
+  background-color: var(--panel-color);
+  outline: 2px solid var(--font-color);
+  text-align: center;
+}
+
+.houseTitle {
+  border-radius: 8px;
+  color: var(--panel-color);
+  background-color: #555;
+  outline: 2px solid #555;
+  font-weight: 800;
+  margin: 8px auto;
+  padding: 4px;
+  text-align: center;
+  vertical-align: middle;
+  width: 250px;
+}
+
+.houseSubtitle {
+  color: var(--font-color);
+  font-weight: 400;
+  margin: 8px auto;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.partyControlReport {
+  display: inline-block;
+  width: 90px;
+}
+
+.partyDistrictCount {
+  border-radius: 8px;
+  color: var(--font-color);
+  margin: 0 auto 6px auto;
+  padding: 4px 0;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 30px;
+  width: 60px;
+}
+
+.winnerDeclaration {
+  margin: 20px 0 8px 0;
+  font-size: 24px;
+  font-style: italic;
+}
+
+.winnerDeclarationLeft {
+  text-align: left;
+  margin-left: 12px;
+  color: rgba(255, 230, 0, 0.7);
+  text-shadow: rgb(255, 94, 0) -1px -1px;
+}
+
+.winnerDeclarationRight {
+  text-align: right;
+  margin-right: 8px;
+  color: rgba(255, 230, 0, 0.7);
+  text-shadow: rgb(255, 94, 0) -1px -1px;
+}
+
+.winnerDeclarationTie {
+  text-align: center;
+  color: var(--subtle-color);
+}
+
+#mapWrapper {
+  flex-grow: 1;
+  margin: 20px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+#map {
+  display: grid;
+}
+
+.voterSlot {
+  position: relative; /* for pop up absolute positioning */
+  background-color: #f00; /* to be overwritten by per-district styles */
+  border: var(--district-border-width) solid transparent;
+}
+
+.voterSlot.district-border-bottom {
+  border-bottom: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voterSlot.district-border-right {
+  border-right: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voterSlot.district-border-top {
+  border-top: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voterSlot.district-border-left {
+  border-left: var(--district-border-width) solid rgba(0, 0, 0, 0.3);
+}
+
+.voterAffiliation {
+  border: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+.voterAffiliation.party0 {
+  width: 36px;  /* circular and square affiliation match in area */
+  height: 36px;
+  border-radius: 20px;
+  margin: calc(10px - var(--district-border-width))  auto;
+}
+
+.voterAffiliation.party1 {
+  width: 31.45px; /* circular and square affiliation match in area */
+  height: 31.45px;
+  margin: calc(12.275px - var(--district-border-width)) auto;
+}
+
+.none {
+  background-color: var(--font-color);
+}
+
+.districtReport {
+  width: var(--panel-width);
+  height: 165px;
+  padding: 12px;
+  background-color: var(--panel-color);
+  outline: 2px solid var(--font-color);
+  color: var(--font-color);
+  text-align: center;
+}
+
+.hoverHeadsUp {
+  padding: 47px 0;
+  color: #aaa;
+  font-size: 30px;
+  font-style: italic;
+}
+
+.districtTitle {
+  height: 22px;
+  color: var(--bg-color);
+  margin: 0 auto 10px auto;
+  padding: 6px 4px 6px 4px;
+  text-align: center;
+}
+
+.partyCount {
+  margin: 0 0 0 6px;
+}
+
+.partyColorDot {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+}
+
+.countBox {
+  display: inline-block;
+  font-weight: bold;
+}
+
+.declaration {
+  display: inline-block;
+  color: #997;
+}
+
+.winner {
+}
+
+.loser {
+}
+
+.tie {
+  color: #888;
+}
+
+.spacer {
+  height: 1px;
+}
+
+.controlLine>input,select {  
+  border: 1px solid #888;
+  margin-left: 6px;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  font-size: 22px;
+  text-align: center;
+  text-align-last: center;
+}
+
+#timer {
+  margin-left: 25px;
+}
+
+.partyColorControlLine {
+  margin: 0 0 0 6px;
+}
+
+.regenerativeControls {
+  width: var(--panel-width);
+  margin: 12px 0 0 0;
+  padding: 8px 12px 12px 12px;
+  background-color: var(--panel-color);
+  outline: 2px solid var(--font-color);
+}
+
+select {  
+  width: 60px;
+}
+
+input[type=color] {  
+  width: 50px;
+}
+
+#percentParty0,#percentParty1 {  
+  width: 52px;
+}
+
+.regenerateButtonWrapper {
+  margin: 18px 0 12px 0;
+}
+
+.regenerateButton {
+  display: block;
+  width: 292px;
+	cursor: pointer;
+	padding: 6px 12px;
+	text-decoration: none;
+  text-align: center;
+  font-size: 22px;
+}
+.regenerateButton:active {
+	position: relative;
+	top: 1px;
+}

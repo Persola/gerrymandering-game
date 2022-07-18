@@ -1,3 +1,8 @@
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
 const DIST_ID_TO_COLOR = {
   0: '00af91',
   1: 'cc7351',
@@ -378,6 +383,7 @@ document.body.onclick = (e) => {
     selectDistrict(Number(e.target.getAttribute('data-district-id')));
   } else if (targetHasClass('regenerateButton', e)) {
     deselectDistrict();
+    generate();
     unhighlightButton();
   } else {
     deselectDistrict();
@@ -816,3 +822,7 @@ window.onload = (e) => {
   setCursor(null);
   restartTimer();
 };
+
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

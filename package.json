@@ -1,0 +1,15 @@
+{
+  "name": "lolla-gerrymandering-game",
+  "version": "0.0.1",
+  "displayName": "Gerrymandering Game",
+  "scripts": {
+    "clear": "rm ./docs/*",
+    "copyStaticAssets": "cp ./static/* ./docs/",
+    "pack": "webpack --config ./webpack.config.js",
+    "build": "npm run clear; npm run copyStaticAssets; npm run pack"
+  },
+  "devDependencies": {
+    "webpack": "~5.73.0",
+    "webpack-cli": "~4.10.0"
+  }
+}
