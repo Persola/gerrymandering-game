@@ -53,9 +53,10 @@ appState.partyColors[1] = $('#party1color').value;
 // dummy interval to start
 let timerInterval = setInterval(() => null, 100);
 
-// Double nested array of voter data. See generateVoters
+// Double nested array of voter data (see generateVoters)
 const voters = [];
 const origVoters = [];
+let districtCounts = {};
 
 // PURE FUNCTIONS OF STATE
 
@@ -66,8 +67,44 @@ let rootTotalVoters = () => { return rootNumDistricts() * rootNumVotersPerDistri
 // LOAD SOUND
 
 const clickFoley = new Audio('./click.mp3');
+const crunchFoley = new Audio('./crunch.m4a');
 
-const districtCounts = (voters) => {
+const resultFromDistrictCount = (districtCount) => {
+  if (districtCount.party0 > districtCount.party1) {
+    return 'party0';
+  }
+
+  if (districtCount.party0 < districtCount.party1) {
+    return 'party1';
+  }
+
+  if (districtCount.party0 !== districtCount.party1) {
+    throw error("what's up with this district count?");
+  }
+
+  return 'tie';
+};
+
+const countVoters = () => {
+  const newCount = countFromVoters(voters);
+
+  let districtChanged = false;
+
+  for (distId of Object.keys(districtCounts)) {
+    if (
+      resultFromDistrictCount(districtCounts[distId])
+      !== resultFromDistrictCount(newCount[distId])
+    ) {
+      districtChanged = true;
+    }
+  }
+
+  if (districtChanged) { crunchFoley.play(); };
+
+  districtCounts = newCount;
+};
+
+const countFromVoters = (voters) => {
   const counts = {};
   for (let distId = 0; distId < mapConfig.numDistricts; distId++) {
     counts[distId] = {};
@@ -143,6 +180,7 @@ const updateMapConfigFromInputs = () => {
 const assignVoterToDistrict = (voterId, districtId) => {
   clickFoley.play();
   voters[voterId[0]][voterId[1]].districtId = districtId;
+  countVoters();
   checkDistrictSizes();
   render();
 };
@@ -159,10 +197,8 @@ const deselectDistrict = () => {
 
 const checkDistrictSizes = () => {
   appState.invalidHeadcountDistrictIds.length = 0;
-  const counts = districtCounts(voters);
   for (let distId = 0; distId < mapConfig.numDistricts; distId++) {
-    const distCount = counts[distId];
-    const distTotal = distCount.party0 + distCount.party1;
+    const distTotal = districtCounts[distId].party0 + districtCounts[distId].party1;
     if (Math.abs(mapConfig.votersPerDistrict - distTotal) > 1) {
       appState.invalidHeadcountDistrictIds.push(distId);
     }
@@ -195,6 +231,7 @@ const generate = () => {
   }
 
   generateVoters();
+  countVoters();
   setOrigVoters();
   updateOrigHouseReport();
   checkDistrictSizes();
@@ -538,8 +575,7 @@ const updateOrigHouseReport = () => {
 };
 
 const renderHouseReport = (votersForReport, title) => {
-  const distCounts = districtCounts(votersForReport);
-  const results = overallCount(distCounts);
+  const results = overallCount(districtCounts);
   return `
     <div class="houseTitle">${title}</div>
     ${winnerDeclaration(results)}
@@ -587,7 +623,7 @@ const winnerDeclaration = (results) => {
 };
 
 const districtReport = (distId) => {
-  const districtCount = districtCounts(voters)[distId];
+  const districtCount = districtCounts[distId];
   return `
     <div class="districtTitle district-${distId}">DISTRICT</div>
     ${winnerDeclaration(districtCount)}
