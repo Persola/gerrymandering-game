@@ -90,14 +90,12 @@ const resultFromDistrictCount = (districtCount) => {
   return 'tie';
 };
 
-const countVoters = () => {
-  const newCount = countFromVoters(voters);
-
+const playCrunchIfConvertedDistrict = (oldCount, newCount) => {
   let districtChanged = false;
 
-  for (distId of Object.keys(districtCounts)) {
+  for (distId of Object.keys(newCount)) {
     if (
-      resultFromDistrictCount(districtCounts[distId])
+      resultFromDistrictCount(oldCount[distId])
       !== resultFromDistrictCount(newCount[distId])
     ) {
       districtChanged = true;
@@ -105,7 +103,13 @@ const countVoters = () => {
   }
 
   if (districtChanged) { crunchFoley.play(); };
+};
 
+const countVoters = (voterAssignment) => {
+  const newCount = countFromVoters(voters);
+  if (voterAssignment) {
+    playCrunchIfConvertedDistrict(districtCounts, newCount);
+  }
   districtCounts = newCount;
 };
 
@@ -185,7 +189,7 @@ const updateMapConfigFromInputs = () => {
 const assignVoterToDistrict = (voterId, districtId) => {
   clickFoley.play();
   voters[voterId[0]][voterId[1]].districtId = districtId;
-  countVoters();
+  countVoters(true);
   checkDistrictSizes();
   render();
 };
@@ -236,7 +240,7 @@ const generate = () => {
   }
 
   generateVoters();
-  countVoters();
+  countVoters(false);
   setOrigVoters();
   updateOrigHouseReport();
   checkDistrictSizes();
