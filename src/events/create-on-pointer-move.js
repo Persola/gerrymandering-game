@@ -1,56 +1,41 @@
-import assignableClassName from '../data/assignable-class';
 import setCursor from '../dynamic-styles/set-cursor';
 import applyDynamicStyles from '../dynamic-styles/apply-dynamic-styles';
 import voterIsAssignable from '../map-logic/voter-is-assignable';
-import updateDistrictReport from '../render/update-district-report';
-import clearDistrictReport from '../render/clear-district-report';
+import renderDistrictReport from '../render/render-district-report';
+import renderAssignableIndicator from '../render/render-assignable-indicator';
+import updateHoveredDistrictId from '../update-state/update-hovered-district-id';
+import updateState from '../update-state/update-state';
 import extractVoterId from '../util/extract-voter-id';
 import targetHasClass from '../util/target-has-class';
-
-const updateAssignVoterIndicator = ($, hoveredSlot, appState, mapConfig) => {
-  const indicatedSlot = $(`.${assignableClassName}`);
-
-  if (indicatedSlot === hoveredSlot) {
-    return;
-  }
-
-  if (indicatedSlot !== null) {
-    indicatedSlot.classList.remove(assignableClassName);
-  }
-
-  if (hoveredSlot !== null) {
-    hoveredSlot.classList.add(assignableClassName);
-  }
-};
 
 export default ($, appState, mapConfig) => {
   return (e) => {
     if (targetHasClass('voterAffiliation', e)) {
-      updateDistrictReport(appState, e.target.parentNode, $);
-      updateAssignVoterIndicator(
-        $,
-        voterIsAssignable(
-          extractVoterId(e.target.parentElement.getAttribute('data-voter-id')),
-          appState.selectedDistrictId,
-          Number(e.target.parentElement.getAttribute('data-district-id')),
-          appState,
-          mapConfig
-        )
-        ? e.target.parentNode
-        : null,
+      updateHoveredDistrictId(appState, e.target.parentNode)
+      updateState(appState, { hoveringOnSlot: false });
+
+      const hoveredSlot = voterIsAssignable(
+        extractVoterId(e.target.parentElement.getAttribute('data-voter-id')),
+        appState.selectedDistrictId,
+        Number(e.target.parentElement.getAttribute('data-district-id')),
         appState,
         mapConfig
-      );
-      appState.hoveringOnSlot = false;
+      )
+      ? e.target.parentNode
+      : null;
+      renderAssignableIndicator($, hoveredSlot);
+      renderDistrictReport(appState, $);
       applyDynamicStyles($, appState, mapConfig);
     } else if (targetHasClass('voterSlot', e)) {
-      updateDistrictReport(appState, e.target, $);
-      updateAssignVoterIndicator($, null, appState, mapConfig);
-      appState.hoveringOnSlot = true;
+      updateHoveredDistrictId(appState, e.target)
+      updateState(appState, { hoveringOnSlot: true });
+      renderDistrictReport(appState, $);
+      renderAssignableIndicator($, null);
     } else {
-      clearDistrictReport(appState, $);
-      updateAssignVoterIndicator($, null, appState, mapConfig);
-      appState.hoveringOnSlot = false;
+      updateHoveredDistrictId(appState, null)
+      updateState(appState, { hoveringOnSlot: false });
+      renderDistrictReport(appState, $);
+      renderAssignableIndicator($, null);
     }
 
     setCursor($, appState);

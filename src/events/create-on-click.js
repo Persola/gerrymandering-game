@@ -3,25 +3,12 @@ import setCursor from '../dynamic-styles/set-cursor';
 import generate from '../events/generate';
 import extractVoterId from '../util/extract-voter-id';
 import renderMap from '../render/render-map';
-import updateCurrentHouseReport from '../render/update-current-house-report';
+import renderCurrentHouseReport from '../render/render-current-house-report';
+import updateState from '../update-state/update-state';
 
 import targetHasClass from '../util/target-has-class';
 import voterIsAssignable from '../map-logic/voter-is-assignable';
-import assignVoterToDistrict from './assign-voter-to-district';
-
-const selectDistrict = ($, appState, districtId) => {
-  appState.selectedDistrictId = districtId;
-  setCursor($, appState);
-};
-
-const deselectDistrict = ($, appState) => {
-  appState.selectedDistrictId = null;
-  setCursor($, appState);
-};
-
-const unhighlightButton = ($, appState, mapConfig) => {
-  appState.buttonHighlighted = false;
-};
+import assignVoterToDistrict from '../update-state/assign-voter-to-district';
 
 export default ($, appState, mapConfig) => {
   return (e) => {
@@ -32,17 +19,22 @@ export default ($, appState, mapConfig) => {
         assignVoterToDistrict(clickedVoterId, appState.selectedDistrictId, appState, mapConfig, $);
       }
     } else if (targetHasClass('voterSlot', e)) {
-      selectDistrict($, appState, Number(e.target.getAttribute('data-district-id')));
+      updateState(appState, {
+        selectedDistrictId: Number(e.target.getAttribute('data-district-id'))
+      });
+      setCursor($, appState);
     } else if (targetHasClass('regenerateButton', e)) {
-      deselectDistrict($, appState);
+      updateState(appState, { selectedDistrictId: null });
+      setCursor($, appState);
       generate($, mapConfig, appState);
-      unhighlightButton($, appState, mapConfig);
+      updateState(appState, { buttonHighlighted: false });
     } else {
-      deselectDistrict($, appState);
+      updateState(appState, { selectedDistrictId: null });
+      setCursor($, appState);
     }
   
     applyDynamicStyles($, appState, mapConfig);
     renderMap($, mapConfig, appState);
-    updateCurrentHouseReport($, appState.districtCounts);
+    renderCurrentHouseReport($, appState.districtCounts);
   };
 };

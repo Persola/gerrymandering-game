@@ -1,6 +1,6 @@
 import countFromVoters from '../count-logic/count-from-voters';
 import playCrunchIfConvertedDistrict from '../count-logic/play-crunch-if-converted-district';
-import checkDistrictSizes from '../map-logic/check-district-sizes';
+import updateInvalidDistricts from './update-invalid-districts';
 
 const clickFoley = new Audio('./click.mp3');
 
@@ -12,5 +12,5 @@ export default (voterId, districtId, appState, mapConfig, $) => {
   playCrunchIfConvertedDistrict(appState.districtCounts, newCount);
   appState.districtCounts = newCount;
 
-  checkDistrictSizes(appState, mapConfig);
+  updateInvalidDistricts(appState, mapConfig);
 };

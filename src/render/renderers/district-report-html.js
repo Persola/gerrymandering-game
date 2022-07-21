@@ -1,7 +1,18 @@
 import winnerDeclarationHtml from './winner-declaration-html';
 
 export default (distId, districtCounts) => {
+  if (distId === null) {
+    return `
+    <div class="hoverHeadsUp">
+      Hover over a district
+      <br />
+      to see its vote count
+    </div>
+    `;
+  }
+
   const districtCount = districtCounts[distId];
+
   return `
     <div class="districtTitle district-${distId}">DISTRICT</div>
     ${winnerDeclarationHtml(districtCount)}
