@@ -1,4 +1,4 @@
-import renderVoter from './render-voter';
+import renderVoter from './voter-dom-node';
 
 export default (voters, rootTotalVoters) => {
   const mapDom = document.createElement('div');

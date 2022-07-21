@@ -1,14 +1,25 @@
-import coordsWithinDistrict from './coords-within-district';
-
 export default (centerVoterCoords, districtId, voters, rootTotalVoters) => {
+  const coordsAreWithinDistrict = (coords) => {
+    if (
+      coords[0] < 0 ||
+      coords[1] < 0 ||
+      coords[0] >= (rootTotalVoters) ||
+      coords[1] >= (rootTotalVoters)
+    ) {
+      return false; // out of bounds, not a voter
+    }
+  
+    return voters[coords[0]][coords[1]].districtId === districtId;
+  };
+
   return {
-    down:      coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1]    ], districtId, voters, rootTotalVoters),
-    downRight: coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    right:     coordsWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    upRight:   coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    up:        coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1]    ], districtId, voters, rootTotalVoters),
-    upLeft:    coordsWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters),
-    left:      coordsWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters),
-    downLeft:  coordsWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters)
+    down:      coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1]    ]),
+    downRight: coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] + 1]),
+    right:     coordsAreWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] + 1]),
+    upRight:   coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] + 1]),
+    up:        coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1]    ]),
+    upLeft:    coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] - 1]),
+    left:      coordsAreWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] - 1]),
+    downLeft:  coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] - 1])
   };
 };

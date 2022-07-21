@@ -1,6 +1,6 @@
 import overallCount from '../../count-logic/overall-count';
 
-import winnerDeclaration from './winner-declaration';
+import winnerDeclaration from './winner-declaration-html';
 
 export default (title, districtCounts) => {
   const results = overallCount(districtCounts);

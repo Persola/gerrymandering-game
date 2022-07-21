@@ -1,10 +1,10 @@
-import winnerDeclaration from './winner-declaration';
+import winnerDeclarationHtml from './winner-declaration-html';
 
 export default (distId, districtCounts) => {
   const districtCount = districtCounts[distId];
   return `
     <div class="districtTitle district-${distId}">DISTRICT</div>
-    ${winnerDeclaration(districtCount)}
+    ${winnerDeclarationHtml(districtCount)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">
         ${districtCount.party0}

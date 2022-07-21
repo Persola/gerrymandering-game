@@ -1,8 +1,9 @@
 import applyDynamicStyles from '../dynamic-styles/apply-dynamic-styles';
 import setCursor from '../dynamic-styles/set-cursor';
-import generate from '../generate-data/generate';
+import generate from '../events/generate';
 import extractVoterId from '../util/extract-voter-id';
-import render from '../render/render';
+import renderMap from '../render/render-map';
+import updateCurrentHouseReport from '../render/update-current-house-report';
 
 import targetHasClass from '../util/target-has-class';
 import voterIsAssignable from '../map-logic/voter-is-assignable';
@@ -20,7 +21,6 @@ const deselectDistrict = ($, appState) => {
 
 const unhighlightButton = ($, appState, mapConfig) => {
   appState.buttonHighlighted = false;
-  applyDynamicStyles($, appState, mapConfig);
 };
 
 export default ($, appState, mapConfig) => {
@@ -41,6 +41,8 @@ export default ($, appState, mapConfig) => {
       deselectDistrict($, appState);
     }
   
-    render($, mapConfig, appState);
+    applyDynamicStyles($, appState, mapConfig);
+    renderMap($, mapConfig, appState);
+    updateCurrentHouseReport($, appState.districtCounts);
   };
 };

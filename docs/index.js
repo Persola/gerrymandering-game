@@ -32,32 +32,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/count-logic/count-voters.js":
-/*!*****************************************!*\
-  !*** ./src/count-logic/count-voters.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _count_from_voters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./count-from-voters */ "./src/count-logic/count-from-voters.js");
-/* harmony import */ var _play_crunch_if_converted_district__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./play-crunch-if-converted-district */ "./src/count-logic/play-crunch-if-converted-district.js");
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((voterAssignment, appState, mapConfig) => {
-  const newCount = (0,_count_from_voters__WEBPACK_IMPORTED_MODULE_0__["default"])(appState.voters, mapConfig.numDistricts);
-  if (voterAssignment) {
-    (0,_play_crunch_if_converted_district__WEBPACK_IMPORTED_MODULE_1__["default"])(appState.districtCounts, newCount);
-  }
-  appState.districtCounts = newCount;
-});
-
-
-/***/ }),
-
 /***/ "./src/count-logic/overall-count.js":
 /*!******************************************!*\
   !*** ./src/count-logic/overall-count.js ***!
@@ -174,6 +148,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/data/assignable-class.js":
+/*!**************************************!*\
+  !*** ./src/data/assignable-class.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('assignable');
+
+
+/***/ }),
+
 /***/ "./src/data/dist-id-to-color.js":
 /*!**************************************!*\
   !*** ./src/data/dist-id-to-color.js ***!
@@ -271,21 +260,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/data/voter-indicator-class.js":
-/*!*******************************************!*\
-  !*** ./src/data/voter-indicator-class.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('assignVoterIndicator');
-
-
-/***/ }),
-
 /***/ "./src/dynamic-styles/apply-dynamic-styles.js":
 /*!****************************************************!*\
   !*** ./src/dynamic-styles/apply-dynamic-styles.js ***!
@@ -297,9 +271,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../data/dist-id-to-color */ "./src/data/dist-id-to-color.js");
-/* harmony import */ var _data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data/voter-indicator-class */ "./src/data/voter-indicator-class.js");
+/* harmony import */ var _data_assignable_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data/assignable-class */ "./src/data/assignable-class.js");
 /* harmony import */ var _style_renderers_district_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-renderers/district-styles */ "./src/dynamic-styles/style-renderers/district-styles.js");
-/* harmony import */ var _style_renderers_party_split_input_background_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style-renderers/party-split-input-background-styles */ "./src/dynamic-styles/style-renderers/party-split-input-background-styles.js");
+/* harmony import */ var _style_renderers_party_split_input_bg_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style-renderers/party-split-input-bg-styles */ "./src/dynamic-styles/style-renderers/party-split-input-bg-styles.js");
 /* harmony import */ var _style_renderers_button_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style-renderers/button-style */ "./src/dynamic-styles/style-renderers/button-style.js");
 
 
@@ -318,10 +292,10 @@ __webpack_require__.r(__webpack_exports__);
   }
   styleText += `\n.party0 { background-color: ${appState.partyColors[0]}; }`;
   styleText += `\n.party1 { background-color: ${appState.partyColors[1]}; }`;
-  styleText += (0,_style_renderers_party_split_input_background_styles__WEBPACK_IMPORTED_MODULE_3__["default"])(appState);
+  styleText += (0,_style_renderers_party_split_input_bg_styles__WEBPACK_IMPORTED_MODULE_3__["default"])(appState.partyColors);
   styleText += (0,_style_renderers_button_style__WEBPACK_IMPORTED_MODULE_4__["default"])(appState.buttonHighlighted);
   styleText += `
-    .${_data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_1__["default"]} {
+    .${_data_assignable_class__WEBPACK_IMPORTED_MODULE_1__["default"]} {
       background-image: none;
       background-color: #${_data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_0__["default"][appState.selectedDistrictId]};
     }
@@ -500,24 +474,24 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/dynamic-styles/style-renderers/party-split-input-background-styles.js":
-/*!***********************************************************************************!*\
-  !*** ./src/dynamic-styles/style-renderers/party-split-input-background-styles.js ***!
-  \***********************************************************************************/
+/***/ "./src/dynamic-styles/style-renderers/party-split-input-bg-styles.js":
+/*!***************************************************************************!*\
+  !*** ./src/dynamic-styles/style-renderers/party-split-input-bg-styles.js ***!
+  \***************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((appState) => {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((partyColors) => {
   return `
     .controlLine>input[class=party0] {
-      background-color: ${appState.partyColors[0]}88;
+      background-color: ${partyColors[0]}88;
     }
 
     .controlLine>input[class=party1] {
-      background-color: ${appState.partyColors[1]}88;
+      background-color: ${partyColors[1]}88;
     }
   `;
 });
@@ -535,9 +509,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _count_logic_count_voters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../count-logic/count-voters */ "./src/count-logic/count-voters.js");
-/* harmony import */ var _map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../map-logic/check-district-sizes */ "./src/map-logic/check-district-sizes.js");
-/* harmony import */ var _render_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../render/render */ "./src/render/render.js");
+/* harmony import */ var _count_logic_count_from_voters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../count-logic/count-from-voters */ "./src/count-logic/count-from-voters.js");
+/* harmony import */ var _count_logic_play_crunch_if_converted_district__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../count-logic/play-crunch-if-converted-district */ "./src/count-logic/play-crunch-if-converted-district.js");
+/* harmony import */ var _map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../map-logic/check-district-sizes */ "./src/map-logic/check-district-sizes.js");
 
 
 
@@ -547,9 +521,12 @@ const clickFoley = new Audio('./click.mp3');
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((voterId, districtId, appState, mapConfig, $) => {
   clickFoley.play();
   appState.voters[voterId[0]][voterId[1]].districtId = districtId;
-  (0,_count_logic_count_voters__WEBPACK_IMPORTED_MODULE_0__["default"])(true, appState, mapConfig);
-  (0,_map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_1__["default"])($, appState, mapConfig);
-  (0,_render_render__WEBPACK_IMPORTED_MODULE_2__["default"])($, mapConfig, appState);
+
+  const newCount = (0,_count_logic_count_from_voters__WEBPACK_IMPORTED_MODULE_0__["default"])(appState.voters, mapConfig.numDistricts);
+  (0,_count_logic_play_crunch_if_converted_district__WEBPACK_IMPORTED_MODULE_1__["default"])(appState.districtCounts, newCount);
+  appState.districtCounts = newCount;
+
+  (0,_map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_2__["default"])(appState, mapConfig);
 });
 
 
@@ -573,7 +550,6 @@ __webpack_require__.r(__webpack_exports__);
 const updatePartyColors = ($, appState, mapConfig, e) => {
   appState.partyColors[0] = $('#party0color').value;
   appState.partyColors[1] = $('#party1color').value;
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
 };
 
 const sigDigs = 8;
@@ -586,24 +562,21 @@ const oneMinus = (firstValue) => {
   ) / factor;
 };
 
-const highlightButton = ($, appState, mapConfig) => {
-  appState.buttonHighlighted = true;
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
-};
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, appState, mapConfig) => {
   return (e) => {
     if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_1__["default"])('partyColorPicker', e)) {
       updatePartyColors($, appState, mapConfig, e);
     } else if (e.target.id === 'percentParty0') {
-      highlightButton($, appState, mapConfig);
+      appState.buttonHighlighted = true;
       $('#percentParty1').value = oneMinus(Number($('#percentParty0').value));
     } else if (e.target.id === 'percentParty1') {
-      highlightButton($, appState, mapConfig);
+      appState.buttonHighlighted = true;
       $('#percentParty0').value = oneMinus(Number($('#percentParty1').value));
     } else if (['numDist', 'votersPerDist'].includes(e.target.id)) {
-      highlightButton($, appState, mapConfig);
+      appState.buttonHighlighted = true;
     }
+
+    (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
   }
 });
 
@@ -622,12 +595,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
 /* harmony import */ var _dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dynamic-styles/set-cursor */ "./src/dynamic-styles/set-cursor.js");
-/* harmony import */ var _generate_data_generate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../generate-data/generate */ "./src/generate-data/generate.js");
+/* harmony import */ var _events_generate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../events/generate */ "./src/events/generate.js");
 /* harmony import */ var _util_extract_voter_id__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/extract-voter-id */ "./src/util/extract-voter-id.js");
-/* harmony import */ var _render_render__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../render/render */ "./src/render/render.js");
-/* harmony import */ var _util_target_has_class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/target-has-class */ "./src/util/target-has-class.js");
-/* harmony import */ var _map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../map-logic/voter-is-assignable */ "./src/map-logic/voter-is-assignable.js");
-/* harmony import */ var _assign_voter_to_district__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./assign-voter-to-district */ "./src/events/assign-voter-to-district.js");
+/* harmony import */ var _render_render_map__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../render/render-map */ "./src/render/render-map.js");
+/* harmony import */ var _render_update_current_house_report__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../render/update-current-house-report */ "./src/render/update-current-house-report.js");
+/* harmony import */ var _util_target_has_class__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../util/target-has-class */ "./src/util/target-has-class.js");
+/* harmony import */ var _map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../map-logic/voter-is-assignable */ "./src/map-logic/voter-is-assignable.js");
+/* harmony import */ var _assign_voter_to_district__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./assign-voter-to-district */ "./src/events/assign-voter-to-district.js");
+
 
 
 
@@ -650,28 +625,29 @@ const deselectDistrict = ($, appState) => {
 
 const unhighlightButton = ($, appState, mapConfig) => {
   appState.buttonHighlighted = false;
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, appState, mapConfig) => {
   return (e) => {
-    if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_5__["default"])('voterAffiliation', e)) {
+    if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_6__["default"])('voterAffiliation', e)) {
       const clickedVoterId = (0,_util_extract_voter_id__WEBPACK_IMPORTED_MODULE_3__["default"])(e.target.parentElement.getAttribute('data-voter-id'));
       const replacedDistrictId = Number(e.target.parentElement.getAttribute('data-district-id'));
-      if ((0,_map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_6__["default"])(clickedVoterId, appState.selectedDistrictId, replacedDistrictId, appState, mapConfig)) {
-        (0,_assign_voter_to_district__WEBPACK_IMPORTED_MODULE_7__["default"])(clickedVoterId, appState.selectedDistrictId, appState, mapConfig, $);
+      if ((0,_map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_7__["default"])(clickedVoterId, appState.selectedDistrictId, replacedDistrictId, appState, mapConfig)) {
+        (0,_assign_voter_to_district__WEBPACK_IMPORTED_MODULE_8__["default"])(clickedVoterId, appState.selectedDistrictId, appState, mapConfig, $);
       }
-    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_5__["default"])('voterSlot', e)) {
+    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_6__["default"])('voterSlot', e)) {
       selectDistrict($, appState, Number(e.target.getAttribute('data-district-id')));
-    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_5__["default"])('regenerateButton', e)) {
+    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_6__["default"])('regenerateButton', e)) {
       deselectDistrict($, appState);
-      (0,_generate_data_generate__WEBPACK_IMPORTED_MODULE_2__["default"])($, mapConfig, appState);
+      (0,_events_generate__WEBPACK_IMPORTED_MODULE_2__["default"])($, mapConfig, appState);
       unhighlightButton($, appState, mapConfig);
     } else {
       deselectDistrict($, appState);
     }
   
-    (0,_render_render__WEBPACK_IMPORTED_MODULE_4__["default"])($, mapConfig, appState);
+    (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
+    (0,_render_render_map__WEBPACK_IMPORTED_MODULE_4__["default"])($, mapConfig, appState);
+    (0,_render_update_current_house_report__WEBPACK_IMPORTED_MODULE_5__["default"])($, appState.districtCounts);
   };
 });
 
@@ -688,13 +664,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dynamic-styles/set-cursor */ "./src/dynamic-styles/set-cursor.js");
-/* harmony import */ var _map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../map-logic/voter-is-assignable */ "./src/map-logic/voter-is-assignable.js");
-/* harmony import */ var _render_update_district_report__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../render/update-district-report */ "./src/render/update-district-report.js");
-/* harmony import */ var _render_clear_district_report__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../render/clear-district-report */ "./src/render/clear-district-report.js");
-/* harmony import */ var _util_extract_voter_id__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/extract-voter-id */ "./src/util/extract-voter-id.js");
-/* harmony import */ var _util_target_has_class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/target-has-class */ "./src/util/target-has-class.js");
-/* harmony import */ var _update_assign_voter_indicator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./update-assign-voter-indicator */ "./src/events/update-assign-voter-indicator.js");
+/* harmony import */ var _data_assignable_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../data/assignable-class */ "./src/data/assignable-class.js");
+/* harmony import */ var _dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dynamic-styles/set-cursor */ "./src/dynamic-styles/set-cursor.js");
+/* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
+/* harmony import */ var _map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../map-logic/voter-is-assignable */ "./src/map-logic/voter-is-assignable.js");
+/* harmony import */ var _render_update_district_report__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../render/update-district-report */ "./src/render/update-district-report.js");
+/* harmony import */ var _render_clear_district_report__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../render/clear-district-report */ "./src/render/clear-district-report.js");
+/* harmony import */ var _util_extract_voter_id__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../util/extract-voter-id */ "./src/util/extract-voter-id.js");
+/* harmony import */ var _util_target_has_class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/target-has-class */ "./src/util/target-has-class.js");
 
 
 
@@ -703,15 +680,31 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+const updateAssignVoterIndicator = ($, hoveredSlot, appState, mapConfig) => {
+  const indicatedSlot = $(`.${_data_assignable_class__WEBPACK_IMPORTED_MODULE_0__["default"]}`);
+
+  if (indicatedSlot === hoveredSlot) {
+    return;
+  }
+
+  if (indicatedSlot !== null) {
+    indicatedSlot.classList.remove(_data_assignable_class__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  }
+
+  if (hoveredSlot !== null) {
+    hoveredSlot.classList.add(_data_assignable_class__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  }
+};
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, appState, mapConfig) => {
   return (e) => {
-    if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_5__["default"])('voterAffiliation', e)) {
-      (0,_render_update_district_report__WEBPACK_IMPORTED_MODULE_2__["default"])(appState, e.target.parentNode, $);
-      (0,_update_assign_voter_indicator__WEBPACK_IMPORTED_MODULE_6__["default"])(
+    if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_7__["default"])('voterAffiliation', e)) {
+      (0,_render_update_district_report__WEBPACK_IMPORTED_MODULE_4__["default"])(appState, e.target.parentNode, $);
+      updateAssignVoterIndicator(
         $,
-        (0,_map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_1__["default"])(
-          (0,_util_extract_voter_id__WEBPACK_IMPORTED_MODULE_4__["default"])(e.target.parentElement.getAttribute('data-voter-id')),
+        (0,_map_logic_voter_is_assignable__WEBPACK_IMPORTED_MODULE_3__["default"])(
+          (0,_util_extract_voter_id__WEBPACK_IMPORTED_MODULE_6__["default"])(e.target.parentElement.getAttribute('data-voter-id')),
           appState.selectedDistrictId,
           Number(e.target.parentElement.getAttribute('data-district-id')),
           appState,
@@ -723,20 +716,107 @@ __webpack_require__.r(__webpack_exports__);
         mapConfig
       );
       appState.hoveringOnSlot = false;
-    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_5__["default"])('voterSlot', e)) {
-      (0,_render_update_district_report__WEBPACK_IMPORTED_MODULE_2__["default"])(appState, e.target, $);
-      (0,_update_assign_voter_indicator__WEBPACK_IMPORTED_MODULE_6__["default"])($, null, appState, mapConfig);
+      (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_2__["default"])($, appState, mapConfig);
+    } else if ((0,_util_target_has_class__WEBPACK_IMPORTED_MODULE_7__["default"])('voterSlot', e)) {
+      (0,_render_update_district_report__WEBPACK_IMPORTED_MODULE_4__["default"])(appState, e.target, $);
+      updateAssignVoterIndicator($, null, appState, mapConfig);
       appState.hoveringOnSlot = true;
     } else {
-      (0,_render_clear_district_report__WEBPACK_IMPORTED_MODULE_3__["default"])(appState, $);
-      (0,_update_assign_voter_indicator__WEBPACK_IMPORTED_MODULE_6__["default"])($, null, appState, mapConfig);
+      (0,_render_clear_district_report__WEBPACK_IMPORTED_MODULE_5__["default"])(appState, $);
+      updateAssignVoterIndicator($, null, appState, mapConfig);
       appState.hoveringOnSlot = false;
     }
 
-    (0,_dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState);
+    (0,_dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_1__["default"])($, appState);
   };
 });
 
+
+
+/***/ }),
+
+/***/ "./src/events/generate.js":
+/*!********************************!*\
+  !*** ./src/events/generate.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _count_logic_count_from_voters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../count-logic/count-from-voters */ "./src/count-logic/count-from-voters.js");
+/* harmony import */ var _data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data/dist-id-to-color */ "./src/data/dist-id-to-color.js");
+/* harmony import */ var _dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dynamic-styles/set-cursor */ "./src/dynamic-styles/set-cursor.js");
+/* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
+/* harmony import */ var _restart_timer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./restart-timer */ "./src/events/restart-timer.js");
+/* harmony import */ var _map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../map-logic/check-district-sizes */ "./src/map-logic/check-district-sizes.js");
+/* harmony import */ var _render_render_map__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../render/render-map */ "./src/render/render-map.js");
+/* harmony import */ var _render_clear_district_report__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../render/clear-district-report */ "./src/render/clear-district-report.js");
+/* harmony import */ var _render_update_current_house_report__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../render/update-current-house-report */ "./src/render/update-current-house-report.js");
+/* harmony import */ var _render_update_orig_house_report__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../render/update-orig-house-report */ "./src/render/update-orig-house-report.js");
+/* harmony import */ var _generate_data_generate_voters__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../generate-data/generate-voters */ "./src/generate-data/generate-voters.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+const updateMapConfigFromInputs = ($, mapConfig) => {
+  if (mapConfig.percentParty0 === undefined) {
+    mapConfig.percentParty0 = 0.5;
+  }
+
+  mapConfig.percentParty0 = Number($('#percentParty0').value);
+  mapConfig.numDistricts = Number($('#numDist').value);
+  mapConfig.votersPerDistrict = Number($('#votersPerDist').value);  
+};
+
+const setOrigVoters = (appState) => {
+  appState.origVoters.length = 0;
+
+  appState.voters.forEach(voterCol => {
+    const col = [];
+
+    voterCol.forEach(voter => {
+      col.push(Object.assign({}, voter));
+    });
+
+    appState.origVoters.push(col);
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, mapConfig, appState) => {
+  updateMapConfigFromInputs($, mapConfig);
+  if (mapConfig.numDistricts > Object.keys(_data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_1__["default"]).length) {
+    throw('I need more colors (add to DIST_ID_TO_COLOR)');
+  }
+
+  (0,_generate_data_generate_voters__WEBPACK_IMPORTED_MODULE_10__["default"])(
+    appState.voters,
+    mapConfig,
+    mapConfig.rootTotalVoters(),
+    mapConfig.rootNumDistricts(),
+    mapConfig.rootNumVotersPerDistrict()
+  );
+  appState.districtCounts = (0,_count_logic_count_from_voters__WEBPACK_IMPORTED_MODULE_0__["default"])(appState.voters, mapConfig.numDistricts);
+  setOrigVoters(appState);
+  (0,_render_update_orig_house_report__WEBPACK_IMPORTED_MODULE_9__["default"])($, appState.origVoters, appState.districtCounts);
+  (0,_map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_5__["default"])(appState, mapConfig);
+  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_3__["default"])($, appState, mapConfig);
+  (0,_render_render_map__WEBPACK_IMPORTED_MODULE_6__["default"])($, mapConfig, appState);
+  (0,_render_update_current_house_report__WEBPACK_IMPORTED_MODULE_8__["default"])($, appState.districtCounts);
+  (0,_dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_2__["default"])($, appState);
+  (0,_render_clear_district_report__WEBPACK_IMPORTED_MODULE_7__["default"])(appState, $);
+  (0,_restart_timer__WEBPACK_IMPORTED_MODULE_4__["default"])($, mapConfig);
+});
 
 
 /***/ }),
@@ -766,42 +846,6 @@ const updateTimer = ($, startTime) => {
   mapConfig.timerInterval = setInterval(() => {
     updateTimer($, startTime);
   }, 1)
-});
-
-
-/***/ }),
-
-/***/ "./src/events/update-assign-voter-indicator.js":
-/*!*****************************************************!*\
-  !*** ./src/events/update-assign-voter-indicator.js ***!
-  \*****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../data/voter-indicator-class */ "./src/data/voter-indicator-class.js");
-/* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, hoveredSlot, appState, mapConfig) => {
-  const indicatedSlot = $(`.${_data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_0__["default"]}`);
-
-  if (indicatedSlot === hoveredSlot) {
-    return;
-  }
-
-  if (indicatedSlot !== null) {
-    indicatedSlot.classList.remove(_data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_0__["default"]);
-  }
-
-  if (hoveredSlot !== null) {
-    hoveredSlot.classList.add(_data_voter_indicator_class__WEBPACK_IMPORTED_MODULE_0__["default"]);
-  }
-
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_1__["default"])($, appState, mapConfig);
 });
 
 
@@ -892,89 +936,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/generate-data/generate.js":
-/*!***************************************!*\
-  !*** ./src/generate-data/generate.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _count_logic_count_voters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../count-logic/count-voters */ "./src/count-logic/count-voters.js");
-/* harmony import */ var _data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data/dist-id-to-color */ "./src/data/dist-id-to-color.js");
-/* harmony import */ var _dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dynamic-styles/set-cursor */ "./src/dynamic-styles/set-cursor.js");
-/* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
-/* harmony import */ var _events_restart_timer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../events/restart-timer */ "./src/events/restart-timer.js");
-/* harmony import */ var _map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../map-logic/check-district-sizes */ "./src/map-logic/check-district-sizes.js");
-/* harmony import */ var _render_render__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../render/render */ "./src/render/render.js");
-/* harmony import */ var _render_clear_district_report__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../render/clear-district-report */ "./src/render/clear-district-report.js");
-/* harmony import */ var _render_update_orig_house_report__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../render/update-orig-house-report */ "./src/render/update-orig-house-report.js");
-/* harmony import */ var _generate_voters__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./generate-voters */ "./src/generate-data/generate-voters.js");
-
-
-
-
-
-
-
-
-
-
-
-
-const updateMapConfigFromInputs = ($, mapConfig) => {
-  if (mapConfig.percentParty0 === undefined) {
-    mapConfig.percentParty0 = 0.5;
-  }
-
-  mapConfig.percentParty0 = Number($('#percentParty0').value);
-  mapConfig.numDistricts = Number($('#numDist').value);
-  mapConfig.votersPerDistrict = Number($('#votersPerDist').value);  
-};
-
-const setOrigVoters = (appState) => {
-  appState.origVoters.length = 0;
-
-  appState.voters.forEach(voterCol => {
-    const col = [];
-
-    voterCol.forEach(voter => {
-      col.push(Object.assign({}, voter));
-    });
-
-    appState.origVoters.push(col);
-  });
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, mapConfig, appState) => {
-  updateMapConfigFromInputs($, mapConfig);
-  if (mapConfig.numDistricts > Object.keys(_data_dist_id_to_color__WEBPACK_IMPORTED_MODULE_1__["default"]).length) {
-    throw('I need more colors (add to DIST_ID_TO_COLOR)');
-  }
-
-  (0,_generate_voters__WEBPACK_IMPORTED_MODULE_9__["default"])(
-    appState.voters,
-    mapConfig,
-    mapConfig.rootTotalVoters(),
-    mapConfig.rootNumDistricts(),
-    mapConfig.rootNumVotersPerDistrict()
-  );
-  (0,_count_logic_count_voters__WEBPACK_IMPORTED_MODULE_0__["default"])(false, appState, mapConfig);
-  setOrigVoters(appState);
-  (0,_render_update_orig_house_report__WEBPACK_IMPORTED_MODULE_8__["default"])($, appState.origVoters, appState.districtCounts);
-  (0,_map_logic_check_district_sizes__WEBPACK_IMPORTED_MODULE_5__["default"])($, appState, mapConfig);
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_3__["default"])($, appState, mapConfig);
-  (0,_render_render__WEBPACK_IMPORTED_MODULE_6__["default"])($, mapConfig, appState);
-  (0,_dynamic_styles_set_cursor__WEBPACK_IMPORTED_MODULE_2__["default"])($, appState);
-  (0,_render_clear_district_report__WEBPACK_IMPORTED_MODULE_7__["default"])(appState, $);
-  (0,_events_restart_timer__WEBPACK_IMPORTED_MODULE_4__["default"])($, mapConfig);
-});
-
-
-/***/ }),
-
 /***/ "./src/map-logic/check-district-sizes.js":
 /*!***********************************************!*\
   !*** ./src/map-logic/check-district-sizes.js ***!
@@ -985,10 +946,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dynamic-styles/apply-dynamic-styles */ "./src/dynamic-styles/apply-dynamic-styles.js");
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, appState, mapConfig) => {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((appState, mapConfig) => {
   appState.invalidHeadcountDistrictIds.length = 0;
   for (let distId = 0; distId < mapConfig.numDistricts; distId++) {
     const distTotal = appState.districtCounts[distId].party0 + appState.districtCounts[distId].party1;
@@ -996,34 +954,6 @@ __webpack_require__.r(__webpack_exports__);
       appState.invalidHeadcountDistrictIds.push(distId);
     }
   }
-
-  (0,_dynamic_styles_apply_dynamic_styles__WEBPACK_IMPORTED_MODULE_0__["default"])($, appState, mapConfig);
-});
-
-
-/***/ }),
-
-/***/ "./src/map-logic/coords-within-district.js":
-/*!*************************************************!*\
-  !*** ./src/map-logic/coords-within-district.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((coords, districtId, voters, rootTotalVoters) => {
-  if (
-    coords[0] < 0 ||
-    coords[1] < 0 ||
-    coords[0] >= (rootTotalVoters) ||
-    coords[1] >= (rootTotalVoters)
-  ) {
-    return false; // out of bounds, not a voter
-  }
-
-  return voters[coords[0]][coords[1]].districtId === districtId;
 });
 
 
@@ -1092,19 +1022,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _coords_within_district__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./coords-within-district */ "./src/map-logic/coords-within-district.js");
-
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((centerVoterCoords, districtId, voters, rootTotalVoters) => {
+  const coordsAreWithinDistrict = (coords) => {
+    if (
+      coords[0] < 0 ||
+      coords[1] < 0 ||
+      coords[0] >= (rootTotalVoters) ||
+      coords[1] >= (rootTotalVoters)
+    ) {
+      return false; // out of bounds, not a voter
+    }
+  
+    return voters[coords[0]][coords[1]].districtId === districtId;
+  };
+
   return {
-    down:      (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] + 1, centerVoterCoords[1]    ], districtId, voters, rootTotalVoters),
-    downRight: (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] + 1, centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    right:     (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0]    , centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    upRight:   (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] - 1, centerVoterCoords[1] + 1], districtId, voters, rootTotalVoters),
-    up:        (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] - 1, centerVoterCoords[1]    ], districtId, voters, rootTotalVoters),
-    upLeft:    (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] - 1, centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters),
-    left:      (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0]    , centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters),
-    downLeft:  (0,_coords_within_district__WEBPACK_IMPORTED_MODULE_0__["default"])([centerVoterCoords[0] + 1, centerVoterCoords[1] - 1], districtId, voters, rootTotalVoters)
+    down:      coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1]    ]),
+    downRight: coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] + 1]),
+    right:     coordsAreWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] + 1]),
+    upRight:   coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] + 1]),
+    up:        coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1]    ]),
+    upLeft:    coordsAreWithinDistrict([centerVoterCoords[0] - 1, centerVoterCoords[1] - 1]),
+    left:      coordsAreWithinDistrict([centerVoterCoords[0]    , centerVoterCoords[1] - 1]),
+    downLeft:  coordsAreWithinDistrict([centerVoterCoords[0] + 1, centerVoterCoords[1] - 1])
   };
 });
 
@@ -1247,53 +1187,50 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/render/render.js":
-/*!******************************!*\
-  !*** ./src/render/render.js ***!
-  \******************************/
+/***/ "./src/render/render-map.js":
+/*!**********************************!*\
+  !*** ./src/render/render-map.js ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _renderers_render_map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/render-map */ "./src/render/renderers/render-map.js");
-/* harmony import */ var _update_current_house_report__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./update-current-house-report */ "./src/render/update-current-house-report.js");
-
+/* harmony import */ var _renderers_map_dom_node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/map-dom-node */ "./src/render/renderers/map-dom-node.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, mapConfig, appState) => {
   $('#mapWrapper').replaceChild(
-    (0,_renderers_render_map__WEBPACK_IMPORTED_MODULE_0__["default"])(
+    (0,_renderers_map_dom_node__WEBPACK_IMPORTED_MODULE_0__["default"])(
       appState.voters,
       mapConfig.rootTotalVoters()
     ),
     $('#map')
   );
-  (0,_update_current_house_report__WEBPACK_IMPORTED_MODULE_1__["default"])($, appState.districtCounts);
 });
 
 
 /***/ }),
 
-/***/ "./src/render/renderers/district-report.js":
-/*!*************************************************!*\
-  !*** ./src/render/renderers/district-report.js ***!
-  \*************************************************/
+/***/ "./src/render/renderers/district-report-html.js":
+/*!******************************************************!*\
+  !*** ./src/render/renderers/district-report-html.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _winner_declaration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./winner-declaration */ "./src/render/renderers/winner-declaration.js");
+/* harmony import */ var _winner_declaration_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./winner-declaration-html */ "./src/render/renderers/winner-declaration-html.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((distId, districtCounts) => {
   const districtCount = districtCounts[distId];
   return `
     <div class="districtTitle district-${distId}">DISTRICT</div>
-    ${(0,_winner_declaration__WEBPACK_IMPORTED_MODULE_0__["default"])(districtCount)}
+    ${(0,_winner_declaration_html__WEBPACK_IMPORTED_MODULE_0__["default"])(districtCount)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">
         ${districtCount.party0}
@@ -1318,10 +1255,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/render/renderers/render-house-report.js":
-/*!*****************************************************!*\
-  !*** ./src/render/renderers/render-house-report.js ***!
-  \*****************************************************/
+/***/ "./src/render/renderers/house-report-html.js":
+/*!***************************************************!*\
+  !*** ./src/render/renderers/house-report-html.js ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1329,7 +1266,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _count_logic_overall_count__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../count-logic/overall-count */ "./src/count-logic/overall-count.js");
-/* harmony import */ var _winner_declaration__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./winner-declaration */ "./src/render/renderers/winner-declaration.js");
+/* harmony import */ var _winner_declaration_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./winner-declaration-html */ "./src/render/renderers/winner-declaration-html.js");
 
 
 
@@ -1338,7 +1275,7 @@ __webpack_require__.r(__webpack_exports__);
   const results = (0,_count_logic_overall_count__WEBPACK_IMPORTED_MODULE_0__["default"])(districtCounts);
   return `
     <div class="houseTitle">${title}</div>
-    ${(0,_winner_declaration__WEBPACK_IMPORTED_MODULE_1__["default"])(results)}
+    ${(0,_winner_declaration_html__WEBPACK_IMPORTED_MODULE_1__["default"])(results)}
     <div class="partyControlReport">
       <div class="partyDistrictCount party0">
         ${results.party0}
@@ -1363,17 +1300,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/render/renderers/render-map.js":
-/*!********************************************!*\
-  !*** ./src/render/renderers/render-map.js ***!
-  \********************************************/
+/***/ "./src/render/renderers/map-dom-node.js":
+/*!**********************************************!*\
+  !*** ./src/render/renderers/map-dom-node.js ***!
+  \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _render_voter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./render-voter */ "./src/render/renderers/render-voter.js");
+/* harmony import */ var _voter_dom_node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./voter-dom-node */ "./src/render/renderers/voter-dom-node.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((voters, rootTotalVoters) => {
@@ -1384,7 +1321,7 @@ __webpack_require__.r(__webpack_exports__);
 
   for (const voterRow of voters) {
     for (const voter of voterRow) {
-      mapDom.appendChild((0,_render_voter__WEBPACK_IMPORTED_MODULE_0__["default"])(voter, voters, rootTotalVoters));
+      mapDom.appendChild((0,_voter_dom_node__WEBPACK_IMPORTED_MODULE_0__["default"])(voter, voters, rootTotalVoters));
     }
   }
 
@@ -1394,10 +1331,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/render/renderers/render-voter.js":
-/*!**********************************************!*\
-  !*** ./src/render/renderers/render-voter.js ***!
-  \**********************************************/
+/***/ "./src/render/renderers/voter-dom-node.js":
+/*!************************************************!*\
+  !*** ./src/render/renderers/voter-dom-node.js ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1432,10 +1369,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/render/renderers/winner-declaration.js":
-/*!****************************************************!*\
-  !*** ./src/render/renderers/winner-declaration.js ***!
-  \****************************************************/
+/***/ "./src/render/renderers/winner-declaration-html.js":
+/*!*********************************************************!*\
+  !*** ./src/render/renderers/winner-declaration-html.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1477,11 +1414,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _renderers_render_house_report__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/render-house-report */ "./src/render/renderers/render-house-report.js");
+/* harmony import */ var _renderers_house_report_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/house-report-html */ "./src/render/renderers/house-report-html.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, districtCounts) => {
-  $('.currentHouseReport').innerHTML = (0,_renderers_render_house_report__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  $('.currentHouseReport').innerHTML = (0,_renderers_house_report_html__WEBPACK_IMPORTED_MODULE_0__["default"])(
     'Gerrymandered Districts',
     districtCounts
   );
@@ -1500,13 +1437,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _renderers_district_report__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/district-report */ "./src/render/renderers/district-report.js");
+/* harmony import */ var _renderers_district_report_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/district-report-html */ "./src/render/renderers/district-report-html.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((appState, voter, $) => {
   const thisMoveHoveredDistrictId = Number(voter.className.match(/district\-(\d+)/)[1]);
   if (appState.hoveredDistrictId !== thisMoveHoveredDistrictId) {
-    $('.districtReport').innerHTML = (0,_renderers_district_report__WEBPACK_IMPORTED_MODULE_0__["default"])(thisMoveHoveredDistrictId, appState.districtCounts);
+    $('.districtReport').innerHTML = (0,_renderers_district_report_html__WEBPACK_IMPORTED_MODULE_0__["default"])(thisMoveHoveredDistrictId, appState.districtCounts);
     appState.hoveredDistrictId = thisMoveHoveredDistrictId;
   }
 });
@@ -1524,11 +1461,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _renderers_render_house_report__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/render-house-report */ "./src/render/renderers/render-house-report.js");
+/* harmony import */ var _renderers_house_report_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderers/house-report-html */ "./src/render/renderers/house-report-html.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (($, origVoters, districtCounts) => {
-  $('.origHouseReport').innerHTML = (0,_renderers_render_house_report__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  $('.origHouseReport').innerHTML = (0,_renderers_house_report_html__WEBPACK_IMPORTED_MODULE_0__["default"])(
     'State - Original Districts',
     districtCounts
   );
@@ -1671,7 +1608,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _events_create_on_pointer_move__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events/create-on-pointer-move */ "./src/events/create-on-pointer-move.js");
 /* harmony import */ var _events_create_on_change__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./events/create-on-change */ "./src/events/create-on-change.js");
 /* harmony import */ var _events_create_on_click__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./events/create-on-click */ "./src/events/create-on-click.js");
-/* harmony import */ var _generate_data_generate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./generate-data/generate */ "./src/generate-data/generate.js");
+/* harmony import */ var _events_generate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./events/generate */ "./src/events/generate.js");
 
 
 
@@ -1687,7 +1624,7 @@ document.body.onchange = (0,_events_create_on_change__WEBPACK_IMPORTED_MODULE_3_
 document.body.onclick = (0,_events_create_on_click__WEBPACK_IMPORTED_MODULE_4__["default"])($, _data_initial_app_state__WEBPACK_IMPORTED_MODULE_1__["default"], _data_initial_map_config__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 window.onload = (e) => {
-  (0,_generate_data_generate__WEBPACK_IMPORTED_MODULE_5__["default"])($, _data_initial_map_config__WEBPACK_IMPORTED_MODULE_0__["default"], _data_initial_app_state__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  (0,_events_generate__WEBPACK_IMPORTED_MODULE_5__["default"])($, _data_initial_map_config__WEBPACK_IMPORTED_MODULE_0__["default"], _data_initial_app_state__WEBPACK_IMPORTED_MODULE_1__["default"]);
 };
 
 })();

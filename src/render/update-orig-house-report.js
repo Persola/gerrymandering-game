@@ -1,4 +1,4 @@
-import renderHouseReport from './renderers/render-house-report';
+import renderHouseReport from './renderers/house-report-html';
 
 export default ($, origVoters, districtCounts) => {
   $('.origHouseReport').innerHTML = renderHouseReport(

@@ -1,14 +1,15 @@
-import countVoters from '../count-logic/count-voters';
+import countFromVoters from '../count-logic/count-from-voters';
 import DIST_ID_TO_COLOR from '../data/dist-id-to-color';
 import setCursor from '../dynamic-styles/set-cursor';
 import applyDynamicStyles from '../dynamic-styles/apply-dynamic-styles';
-import restartTimer from '../events/restart-timer';
+import restartTimer from './restart-timer';
 import checkDistrictSizes from '../map-logic/check-district-sizes';
-import render from '../render/render';
+import renderMap from '../render/render-map';
 import clearDistrictReport from '../render/clear-district-report';
+import updateCurrentHouseReport from '../render/update-current-house-report';
 import updateOrigHouseReport from '../render/update-orig-house-report';
 
-import generateVoters from './generate-voters';
+import generateVoters from '../generate-data/generate-voters';
 
 const updateMapConfigFromInputs = ($, mapConfig) => {
   if (mapConfig.percentParty0 === undefined) {
@@ -47,12 +48,13 @@ export default ($, mapConfig, appState) => {
     mapConfig.rootNumDistricts(),
     mapConfig.rootNumVotersPerDistrict()
   );
-  countVoters(false, appState, mapConfig);
+  appState.districtCounts = countFromVoters(appState.voters, mapConfig.numDistricts);
   setOrigVoters(appState);
   updateOrigHouseReport($, appState.origVoters, appState.districtCounts);
-  checkDistrictSizes($, appState, mapConfig);
+  checkDistrictSizes(appState, mapConfig);
   applyDynamicStyles($, appState, mapConfig);
-  render($, mapConfig, appState);
+  renderMap($, mapConfig, appState);
+  updateCurrentHouseReport($, appState.districtCounts);
   setCursor($, appState);
   clearDistrictReport(appState, $);
   restartTimer($, mapConfig);

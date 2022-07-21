@@ -1,8 +1,8 @@
 import DIST_ID_TO_COLOR from '../data/dist-id-to-color';
-import assignVoterIndicatorClass from '../data/voter-indicator-class';
+import assignableClassName from '../data/assignable-class';
 
 import districtStyles from './style-renderers/district-styles';
-import partySplitInputBackgroundStyles from './style-renderers/party-split-input-background-styles';
+import partySplitInputBackgroundStyles from './style-renderers/party-split-input-bg-styles';
 import buttonStyle from './style-renderers/button-style';
 
 export default ($, appState, mapConfig) => {
@@ -15,10 +15,10 @@ export default ($, appState, mapConfig) => {
   }
   styleText += `\n.party0 { background-color: ${appState.partyColors[0]}; }`;
   styleText += `\n.party1 { background-color: ${appState.partyColors[1]}; }`;
-  styleText += partySplitInputBackgroundStyles(appState);
+  styleText += partySplitInputBackgroundStyles(appState.partyColors);
   styleText += buttonStyle(appState.buttonHighlighted);
   styleText += `
-    .${assignVoterIndicatorClass} {
+    .${assignableClassName} {
       background-image: none;
       background-color: #${DIST_ID_TO_COLOR[appState.selectedDistrictId]};
     }

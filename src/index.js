@@ -3,7 +3,7 @@ import appState from './data/initial-app-state';
 import createOnPointerMove from './events/create-on-pointer-move';
 import createOnChange from './events/create-on-change';
 import createOnClick from './events/create-on-click';
-import generate from './generate-data/generate';
+import generate from './events/generate';
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
